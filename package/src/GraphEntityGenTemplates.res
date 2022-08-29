@@ -71,11 +71,10 @@ import {
   Address,
   BigInt,
   Bytes,
+  log,
   Entity,
   dataSource
 } from "@graphprotocol/graph-ts";
-import { logError } from "../utils/helperFunctions";
-import { SAFE_MODE } from "../config";
 
 export let NETWORK_NAME = dataSource.network(); // e.g. "mainnet", "matic", "avalanche", "ropsten", "poa-core"
 
@@ -140,8 +139,8 @@ let createEntityFunction = (~name, ~fieldInitialValueSettersStrict) =>
   `
 export function create${name}(entityId: string, initialValues: ${name}InitialValues): ${name} {
   entityId = makeSureEntityIdHasCorrectPrefix(entityId);
-  if (SAFE_MODE && ${name}.load(entityId) != null) {
-    logError("THIS CODE IS BUGGY! Trying to create an entity that already exists. (entityType : ${name}, entitiyID: {})", [entityId]);
+  if (${CodegenConfig.safeMode} && ${name}.load(entityId) != null) {
+      log.warning("THIS CODE IS BUGGY! Trying to create an entity that already exists. (entityType : ${name}, entitiyID: {})", [entityId]);
 
     return ${name}.load(entityId) as ${name};
   }
@@ -186,7 +185,7 @@ export function get${name}(entityId: string): ${name} {
   let loaded${name} = ${name}.load(entityId);
 
   if (loaded${name} == null) {
-    logError("THIS CODE IS BUGGY! Unable to find entity of type ${name} with id {}. If this entity hasn't been initialized use the 'getOrInitialize${name}' and handle the case that it needs to be initialized.", [entityId])
+      log.warning("THIS CODE IS BUGGY! Unable to find entity of type ${name} with id {}. If this entity hasn't been initialized use the 'getOrInitialize${name}' and handle the case that it needs to be initialized.", [entityId])
 
     return getOrInitialize${name}Default(entityId);
   }
