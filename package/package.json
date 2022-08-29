@@ -1,11 +1,14 @@
 {
-  "name": "float-subgraph-uncrashable",
-  "version": "1.0.0",
+  "name": "@float-capital/float-subgraph-uncrashable",
+  "version": "0.0.1",
   "description": "Safe Subgraph Code Generation Framework by Float",
   "main": "index.js",
   "repository": "https://github.com/Float-Capital/float-subgraph-uncrashable",
   "author": "Float",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "graphql": "^16.6.0",
     "graphql-import-node": "^0.0.5",
