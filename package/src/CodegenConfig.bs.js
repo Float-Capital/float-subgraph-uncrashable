@@ -15,10 +15,13 @@ var generatedFolderName = Belt_Option.getWithDefault(env.GENERATED_FOLDER_NAME, 
 
 var outputEntityFilePath = "./src/" + generatedFolderName + "/";
 
+var safeMode = Belt_Option.getWithDefault(env.SAFE_MODE, "false");
+
 exports.env = env;
 exports.gqlSchema = gqlSchema;
 exports.graphConfig = graphConfig;
 exports.codegenConfigPath = codegenConfigPath;
 exports.generatedFolderName = generatedFolderName;
 exports.outputEntityFilePath = outputEntityFilePath;
+exports.safeMode = safeMode;
 /* env Not a pure module */
