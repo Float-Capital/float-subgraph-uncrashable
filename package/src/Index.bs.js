@@ -295,7 +295,13 @@ var entityImports = Belt_Array.joinWith(Belt_Array.map(Belt_Array.keep(entityDef
         return a;
       }));
 
+if (!Fs.existsSync(CodegenConfig.outputEntityFilePath)) {
+  Fs.mkdirSync(CodegenConfig.outputEntityFilePath);
+}
+
 Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "EntityHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
+
+var dir = CodegenConfig.outputEntityFilePath;
 
 exports.loadedGraphSchema = loadedGraphSchema;
 exports.repoConfigString = repoConfigString;
@@ -315,4 +321,5 @@ exports.getFieldDefaultTypeNonNull = getFieldDefaultTypeNonNull;
 exports.getFieldDefaultTypeWithNull = getFieldDefaultTypeWithNull;
 exports.functions = functions;
 exports.entityImports = entityImports;
+exports.dir = dir;
 /*  Not a pure module */

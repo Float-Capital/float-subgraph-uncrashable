@@ -327,6 +327,19 @@ let entityImports =
   ->Array.map(entity => `  ${entity["name"]["value"]}`)
   ->Array.joinWith(",\n", a => a)
 
+let dir = `${CodegenConfig.outputEntityFilePath}`;
+
+
+@module("fs")
+external mkdirSync: (
+  ~dir: string,
+) => unit = "mkdirSync"
+
+
+if (!Node_fs.existsSync(dir)){
+    mkdirSync(~dir);
+}
+
 Node_fs.writeFileAsUtf8Sync(
   `${CodegenConfig.outputEntityFilePath}EntityHelpers.ts`,
   outputCode(~entityImports, ~networkIdPrefix=entityPrefixDefinition, ~functions),

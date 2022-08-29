@@ -66,7 +66,7 @@ ${fieldTypeSetters}
 let outputCode = (~entityImports, ~networkIdPrefix, ~functions) =>
   `import {
 ${entityImports}
-} from "../../${CodegenConfig.genaretdFolderName}/schema";
+} from "../../${CodegenConfig.generatedFolderName}/schema";
 import {
   Address,
   BigInt,
