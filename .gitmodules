@@ -1,3 +1,6 @@
 [submodule "templates/oz-subgraphs"]
 	path = templates/oz-subgraphs
 	url = https://github.com/Float-Capital/openzeppelin-subgraphs.git
+[submodule "templates/the-graph-gravity"]
+	path = templates/the-graph-gravity
+	url = git@github.com:Float-Capital/example-subgraph.git
