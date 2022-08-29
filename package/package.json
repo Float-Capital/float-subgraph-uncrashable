@@ -19,6 +19,9 @@
     "res:build": "rescript build",
     "res:start": "rescript build -w",
     "res:clean": "rescript clean",
-    "dev": "node src/index.bs.js"
+    "dev": "node src/index.bs.js",
+    "publish:next": "yarn publish --tag next",
+    "publish:release": "yarn publish",
+    "prepublishOnly": "yarn res:build"
   }
 }
