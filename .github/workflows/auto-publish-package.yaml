@@ -19,3 +19,4 @@ jobs:
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./package/package.json
+          greater-version-only: true
