@@ -12,9 +12,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: cd package
-      - run: yarn
-      - run: yarn res:build
+      - run: cd package && yarn
+      - run: cd package && yarn res:build
       - name: Publish to npm and github
         uses: mikeal/merge-release@v4.0.7
         env:
