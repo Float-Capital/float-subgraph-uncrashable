@@ -1,0 +1,22 @@
+# name: Publish to NPM
+# on:
+#   push:
+#     branches:
+#       - dp/ci-cd # TODO after testing to main
+# jobs:
+#   publish:
+#     name: Publish
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 16
+#       - run: cd package && yarn
+#       - run: cd package && yarn res:build
+#       - name: Publish to npm and github
+#         uses: mikeal/merge-release@v4.0.7
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+#           SRC_PACKAGE_DIR: package/

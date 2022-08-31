@@ -1,6 +1,6 @@
 {
   "name": "@float-capital/float-subgraph-uncrashable",
-  "version": "0.0.16",
+  "version": "0.0.0-dev",
   "description": "Safe Subgraph Code Generation Framework by Float",
   "main": "index.js",
   "repository": "https://github.com/Float-Capital/float-subgraph-uncrashable",
