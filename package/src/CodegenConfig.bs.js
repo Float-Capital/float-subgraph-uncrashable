@@ -5,9 +5,7 @@ var Belt_Option = require("rescript/lib/js/belt_Option.js");
 
 var env = process.env;
 
-var gqlSchema = Belt_Option.getWithDefault(env.GQL_SCHEMA, "../../../../schema.graphql");
-
-var graphConfig = Belt_Option.getWithDefault(env.GRAPH_CONFIG, "../../../../subgraph.yaml");
+var graphManifest = Belt_Option.getWithDefault(env.MANIFEST, "./subgraph.yaml");
 
 var codegenConfigPath = Belt_Option.getWithDefault(env.CODEGEN_CONFIG_PATH, "./uncrashable-config.yaml");
 
@@ -18,8 +16,7 @@ var outputEntityFilePath = "./src/" + generatedFolderName + "/";
 var safeMode = Belt_Option.getWithDefault(env.SAFE_MODE, "false");
 
 exports.env = env;
-exports.gqlSchema = gqlSchema;
-exports.graphConfig = graphConfig;
+exports.graphManifest = graphManifest;
 exports.codegenConfigPath = codegenConfigPath;
 exports.generatedFolderName = generatedFolderName;
 exports.outputEntityFilePath = outputEntityFilePath;

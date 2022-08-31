@@ -2,6 +2,7 @@
 'use strict';
 
 var Fs = require("fs");
+var Path = require("path");
 var Js_dict = require("rescript/lib/js/js_dict.js");
 var JsYaml = require("js-yaml");
 var Belt_Array = require("rescript/lib/js/belt_Array.js");
@@ -12,11 +13,25 @@ var GraphEntityGenTemplates = require("./GraphEntityGenTemplates.bs.js");
 require('graphql-import-node/register')
 ;
 
-var loadedGraphSchema = require(CodegenConfig.gqlSchema);
+var sourceDir = Path.dirname(CodegenConfig.graphManifest);
+
+console.log(sourceDir);
 
 console.log(CodegenConfig.codegenConfigPath);
 
 var repoConfigString = Fs.readFileSync(CodegenConfig.codegenConfigPath, "utf8");
+
+var manifestString = Fs.readFileSync(CodegenConfig.graphManifest, "utf8");
+
+var manifest = JsYaml.load(manifestString);
+
+var schemaPath = manifest.schema.file;
+
+console.log(schemaPath);
+
+var absolutePathSchema = Path.resolve(sourceDir, schemaPath);
+
+var loadedGraphSchema = require(absolutePathSchema);
 
 var repoConfig = JsYaml.load(repoConfigString);
 
@@ -303,8 +318,13 @@ Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "EntityHelpers.ts", GraphE
 
 var dir = CodegenConfig.outputEntityFilePath;
 
-exports.loadedGraphSchema = loadedGraphSchema;
+exports.sourceDir = sourceDir;
 exports.repoConfigString = repoConfigString;
+exports.manifestString = manifestString;
+exports.manifest = manifest;
+exports.schemaPath = schemaPath;
+exports.absolutePathSchema = absolutePathSchema;
+exports.loadedGraphSchema = loadedGraphSchema;
 exports.repoConfig = repoConfig;
 exports.entityDefinitions = entityDefinitions;
 exports.enumsMap = enumsMap;

@@ -1,2 +1,6 @@
 node_modules
 package/lib
+
+graphql_ppx_cache/
+*.merlin
+.bsb.lock

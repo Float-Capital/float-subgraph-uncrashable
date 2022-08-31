@@ -2,11 +2,28 @@
 
 open GraphEntityGenTemplates
 
+@module("path") external dirname: string => string = "dirname"
+@module("path") external resolve: (string,string) => string = "resolve"
+
 @val external requireGqlFile: string => 'a = "require"
 
-let loadedGraphSchema = requireGqlFile(CodegenConfig.gqlSchema)
+let sourceDir = dirname(CodegenConfig.graphManifest)
+Js.log(sourceDir)
+
 Js.log(CodegenConfig.codegenConfigPath)
 let repoConfigString = Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
+
+let manifestString = Node_fs.readFileAsUtf8Sync(CodegenConfig.graphManifest)
+
+let manifest = Utils.loadYaml(manifestString)
+
+let schemaPath = manifest["schema"]["file"]
+Js.log(schemaPath)
+
+let absolutePathSchema = resolve(sourceDir, schemaPath)
+
+let loadedGraphSchema = requireGqlFile(absolutePathSchema)
+ 
 
 let repoConfig = Utils.loadYaml(repoConfigString)
 
@@ -339,6 +356,7 @@ external mkdirSync: (
 if (!Node_fs.existsSync(dir)){
     mkdirSync(~dir);
 }
+
 
 Node_fs.writeFileAsUtf8Sync(
   `${CodegenConfig.outputEntityFilePath}EntityHelpers.ts`,
