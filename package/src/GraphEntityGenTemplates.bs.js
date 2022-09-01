@@ -30,7 +30,7 @@ function getDefaultValues(typeString) {
     case "BigDecimal" :
         return "BigDecimal.zero()";
     case "BigInt" :
-        return "BigInt.fromI32(0)";
+        return "BigInt.zero()";
     case "Boolean" :
         return "false";
     case "Bytes" :
