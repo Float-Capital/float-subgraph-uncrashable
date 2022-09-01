@@ -57,7 +57,7 @@ module.exports = {
          },
         //{ to: "blog", label: "Blog", position: "left" },
         {
-          href: "https://github.com/float-capital",
+          href: "https://github.com/Float-Capital/float-subgraph-uncrashable",
           label: "GitHub",
           position: "right",
         },
@@ -101,7 +101,7 @@ module.exports = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/float-capital",
+              href: "https://github.com/Float-Capital/float-subgraph-uncrashable",
             },
           ],
         },
