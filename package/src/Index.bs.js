@@ -138,11 +138,10 @@ function getFieldValueToSave(nameOfObject, field) {
   var match = getFieldSetterType(field.type);
   switch (match) {
     case /* NormalValue */0 :
-        return nameOfObject + "." + field.name.value;
     case /* Entity */1 :
-        return nameOfObject + "." + field.name.value + ".id";
+        return nameOfObject + "." + field.name.value;
     case /* EntityArray */2 :
-        return "entityArrayToIdArray(" + nameOfObject + "." + field.name.value + ")";
+        return "(" + nameOfObject + "." + field.name.value + ")";
     
   }
 }
@@ -249,7 +248,7 @@ var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (fu
               if (fieldName === "id") {
                 return "";
               } else {
-                return Belt_Option.mapWithDefault(Js_dict.get(fieldsWithDefaultValueLookup, fieldName), GraphEntityGenTemplates.setFieldNameToFieldType(fieldName, getFieldType(undefined, field.type)), (function (param) {
+                return Belt_Option.mapWithDefault(Js_dict.get(fieldsWithDefaultValueLookup, fieldName), GraphEntityGenTemplates.setFieldNameToFieldType(fieldName, getFieldType(true, field.type)), (function (param) {
                               return "";
                             }));
               }
