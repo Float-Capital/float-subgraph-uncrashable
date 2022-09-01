@@ -1,0 +1,228 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "loadedVersions": [
+        {
+          "versionName": "current",
+          "label": "Next",
+          "banner": null,
+          "badge": false,
+          "className": "docs-version-current",
+          "path": "/docs",
+          "tagsPath": "/docs/tags",
+          "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs",
+          "editUrlLocalized": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/i18n/en/docusaurus-plugin-content-docs/current",
+          "isLast": true,
+          "routePriority": -1,
+          "sidebarFilePath": "/Users/svenmueller/Documents/float-subgraph-uncrashable/docs/sidebars.js",
+          "contentPath": "/Users/svenmueller/Documents/float-subgraph-uncrashable/docs/docs",
+          "contentPathLocalized": "/Users/svenmueller/Documents/float-subgraph-uncrashable/docs/i18n/en/docusaurus-plugin-content-docs/current",
+          "docs": [
+            {
+              "unversionedId": "configuration",
+              "id": "configuration",
+              "title": "Configuration",
+              "description": "NOTE: These docs are under active development 👷‍♀️👷",
+              "source": "@site/docs/configuration.md",
+              "sourceDirName": ".",
+              "slug": "/configuration",
+              "permalink": "/docs/configuration",
+              "draft": false,
+              "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs/configuration.md",
+              "tags": [],
+              "version": "current",
+              "frontMatter": {
+                "id": "configuration",
+                "title": "Configuration",
+                "sidebar_label": "Configuration",
+                "slug": "/configuration"
+              },
+              "sidebar": "someSidebar",
+              "previous": {
+                "title": "Installation",
+                "permalink": "/docs/installation"
+              },
+              "next": {
+                "title": "Support",
+                "permalink": "/docs/support"
+              }
+            },
+            {
+              "unversionedId": "installation",
+              "id": "installation",
+              "title": "Installation",
+              "description": "NOTE: These docs are under active development 👷‍♀️👷",
+              "source": "@site/docs/installation.md",
+              "sourceDirName": ".",
+              "slug": "/installation",
+              "permalink": "/docs/installation",
+              "draft": false,
+              "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs/installation.md",
+              "tags": [],
+              "version": "current",
+              "frontMatter": {
+                "id": "installation",
+                "title": "Installation",
+                "sidebar_label": "Installation",
+                "slug": "/installation"
+              },
+              "sidebar": "someSidebar",
+              "previous": {
+                "title": "Overview",
+                "permalink": "/docs/overview"
+              },
+              "next": {
+                "title": "Configuration",
+                "permalink": "/docs/configuration"
+              }
+            },
+            {
+              "unversionedId": "overview",
+              "id": "overview",
+              "title": "Overview",
+              "description": "NOTE: These docs are under active development 👷‍♀️👷",
+              "source": "@site/docs/overview.md",
+              "sourceDirName": ".",
+              "slug": "/overview",
+              "permalink": "/docs/overview",
+              "draft": false,
+              "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs/overview.md",
+              "tags": [],
+              "version": "current",
+              "frontMatter": {
+                "id": "overview",
+                "title": "Overview",
+                "sidebar_label": "Overview",
+                "slug": "/overview"
+              },
+              "sidebar": "someSidebar",
+              "previous": {
+                "title": "Welcome",
+                "permalink": "/docs/"
+              },
+              "next": {
+                "title": "Installation",
+                "permalink": "/docs/installation"
+              }
+            },
+            {
+              "unversionedId": "support",
+              "id": "support",
+              "title": "Support",
+              "description": "NOTE: These docs are under active development 👷‍♀️👷",
+              "source": "@site/docs/support.md",
+              "sourceDirName": ".",
+              "slug": "/support",
+              "permalink": "/docs/support",
+              "draft": false,
+              "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs/support.md",
+              "tags": [],
+              "version": "current",
+              "frontMatter": {
+                "id": "support",
+                "title": "Support",
+                "sidebar_label": "Support",
+                "slug": "/support"
+              },
+              "sidebar": "someSidebar",
+              "previous": {
+                "title": "Configuration",
+                "permalink": "/docs/configuration"
+              }
+            },
+            {
+              "unversionedId": "welcome",
+              "id": "welcome",
+              "title": "Welcome",
+              "description": "NOTE: These docs are under active development 👷‍♀️👷",
+              "source": "@site/docs/welcome.md",
+              "sourceDirName": ".",
+              "slug": "/",
+              "permalink": "/docs/",
+              "draft": false,
+              "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs/welcome.md",
+              "tags": [],
+              "version": "current",
+              "frontMatter": {
+                "id": "welcome",
+                "title": "Welcome",
+                "sidebar_label": "Welcome",
+                "slug": "/"
+              },
+              "sidebar": "someSidebar",
+              "next": {
+                "title": "Overview",
+                "permalink": "/docs/overview"
+              }
+            }
+          ],
+          "drafts": [],
+          "sidebars": {
+            "someSidebar": [
+              {
+                "type": "category",
+                "label": "Introduction",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "welcome"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "overview"
+                  }
+                ],
+                "collapsed": true,
+                "collapsible": true
+              },
+              {
+                "type": "category",
+                "label": "Getting Started",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "installation"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "configuration"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "support"
+                  }
+                ],
+                "collapsed": true,
+                "collapsible": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "docusaurus-plugin-content-pages": {
+    "default": [
+      {
+        "type": "jsx",
+        "permalink": "/",
+        "source": "@site/src/pages/index.js"
+      },
+      {
+        "type": "mdx",
+        "permalink": "/markdown-page",
+        "source": "@site/src/pages/markdown-page.md",
+        "title": "Markdown page example",
+        "description": "You don't need React to write simple standalone pages.",
+        "frontMatter": {
+          "title": "Markdown page example"
+        }
+      }
+    ]
+  },
+  "docusaurus-plugin-debug": {},
+  "docusaurus-theme-classic": {},
+  "docusaurus2-dotenv": {},
+  "docusaurus-bootstrap-plugin": {},
+  "docusaurus-mdx-fallback-plugin": {}
+}

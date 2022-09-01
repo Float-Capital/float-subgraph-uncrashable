@@ -1,0 +1,25 @@
+{
+  "unversionedId": "support",
+  "id": "support",
+  "title": "Support",
+  "description": "NOTE: These docs are under active development 👷‍♀️👷",
+  "source": "@site/docs/support.md",
+  "sourceDirName": ".",
+  "slug": "/support",
+  "permalink": "/docs/support",
+  "draft": false,
+  "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs/docs/support.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "support",
+    "title": "Support",
+    "sidebar_label": "Support",
+    "slug": "/support"
+  },
+  "sidebar": "someSidebar",
+  "previous": {
+    "title": "Configuration",
+    "permalink": "/docs/configuration"
+  }
+}
