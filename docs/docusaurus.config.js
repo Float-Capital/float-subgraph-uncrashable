@@ -99,14 +99,6 @@ module.exports = {
         {
           title: "More",
           items: [
-            // {
-            //   label: "Home",
-            //   to: "https://float.capital",
-            // },
-            //{
-            //  label: "Blog",
-            //  to: "blog",
-            //},
             {
               label: "GitHub",
               href: "https://github.com/float-capital",
