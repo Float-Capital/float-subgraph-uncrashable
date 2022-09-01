@@ -62,6 +62,8 @@ function getNamedType(entityAsIdString, name) {
     return "string";
   } else if (uncaught === "Boolean") {
     return "boolean";
+  } else if (uncaught === "BigDecimal") {
+    return "BigDecimal";
   } else if (uncaught === "Bytes") {
     return "Bytes";
   } else if (uncaught === "Int") {

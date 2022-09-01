@@ -55,6 +55,7 @@ let getNamedType = (~entityAsIdString, name) => {
   | #BigInt => "BigInt"
   | #Bytes => "Bytes"
   | #Boolean => "boolean"
+  | #BigDecimal => "BigDecimal"
   | uncaught =>
     let nonStandardTypeString = uncaught->Obj.magic
 
