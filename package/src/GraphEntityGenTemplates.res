@@ -23,7 +23,8 @@ let getDefaultValues = typeString =>
   | "Address" => `Address.fromString("0x0000000000000000000000000000000000000000")`
   | "Int" => "0"
   | "String" => `""`
-  | "BigInt" => "BigInt.fromI32(0)"
+  | "BigInt" => "BigInt.zero()"
+  | "BigDecimal" => "BigDecimal.zero()"
   | "Boolean" => "false"
   | unknownType => `"${unknownType} - Unknown type"`
   }
@@ -33,6 +34,7 @@ let toStringConverter = (paramName, paramType) =>
   | "Bytes" => `${paramName}.toHex()`
   | "Address" => `${paramName}.toHex()`
   | "BigInt" => `${paramName}.toString()`
+  | "BigDecimal" => `${paramName}.toString()`
   | "String" => paramName
   | unknownType => `"unhandled type in converter ${unknownType} - Please fix the converter"`
   }
@@ -71,9 +73,10 @@ import {
   Address,
   BigInt,
   Bytes,
+  BigDecimal,
   log,
   Entity,
-  dataSource
+  dataSource, 
 } from "@graphprotocol/graph-ts";
 
 export let NETWORK_NAME = dataSource.network(); // e.g. "mainnet", "matic", "avalanche", "ropsten", "poa-core"

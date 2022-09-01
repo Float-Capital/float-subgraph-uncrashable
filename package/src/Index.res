@@ -55,6 +55,7 @@ let getNamedType = (~entityAsIdString, name) => {
   | #BigInt => "BigInt"
   | #Bytes => "Bytes"
   | #Boolean => "boolean"
+  | #BigDecimal => "BigDecimal"
   | uncaught =>
     let nonStandardTypeString = uncaught->Obj.magic
 
@@ -104,11 +105,14 @@ let rec getFieldSetterType = field =>
     NormalValue
   }
 
+//all the same at the moment, ie users can pass the type for base parameters but for all
+//entity types and arrays of entities, the id as a string must be used.
+//Better yet, derivedFrom should be used for arrays of entities if possible
 let getFieldValueToSave = (nameOfObject, field) => {
   switch field["type"]->getFieldSetterType {
   | NormalValue => `${nameOfObject}.${field["name"]["value"]}`
-  | EntityArray => `entityArrayToIdArray(${nameOfObject}.${field["name"]["value"]})`
-  | Entity => `${nameOfObject}.${field["name"]["value"]}.id`
+  | EntityArray => `(${nameOfObject}.${field["name"]["value"]})`
+  | Entity => `${nameOfObject}.${field["name"]["value"]}`
   }
 }
 
@@ -252,7 +256,7 @@ let functions =
         fieldsWithDefaultValueLookup
         ->Js.Dict.get(fieldName)
         ->Option.mapWithDefault(
-          setFieldNameToFieldType(~fieldName, ~fieldType=field["type"]->getFieldType),
+          setFieldNameToFieldType(~fieldName, ~fieldType=field["type"]->getFieldType(~entityAsIdString=true)),
           _ => "",
         )
       }
