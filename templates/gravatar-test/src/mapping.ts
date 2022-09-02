@@ -12,12 +12,12 @@ import {
 } from "./generated/EntityHelpers";
 
 export function handleNewGravatar(event: NewGravatar): void {
-  let x: Array<BigDecimal> = [BigDecimal.fromString("1.2")];
+  let testBDArray: Array<BigDecimal> = [BigDecimal.fromString("1.2")];
   let test2 = generateTestEntity2Id("t2", BigDecimal.fromString("2"));
   createTestEntity2(test2, {
     text: "test",
-    num: BigDecimal.zero(),
-    nums: x,
+    bigDecimalNum: BigDecimal.zero(),
+    bigDecimalArray: testBDArray,
   });
   let grav = createGravatar(generateGravatarId(event.params.id), {
     owner: event.params.owner,
@@ -28,8 +28,8 @@ export function handleNewGravatar(event: NewGravatar): void {
 
   createTestEntity(generateTestEntityId("name", BigDecimal.zero()), {
     text: "test",
-    num: BigDecimal.zero(),
-    nums: x,
+    bigDecimalNum: BigDecimal.zero(),
+    bigDecimalArray: testBDArray,
     gravatar: grav.id,
   });
 }

@@ -10,13 +10,13 @@ type Gravatar @entity {
 type TestEntity @entity {
   id: ID!
   text: String!
-  num: BigDecimal!
-  nums: [BigDecimal!]!
+  bigDecimalNum: BigDecimal!
+  bigDecimalArray: [BigDecimal!]!
   gravatar: Gravatar!
 }
 type TestEntity2 @entity {
   id: ID!
   text: String!
-  num: BigDecimal!
-  nums: [BigDecimal!]!
+  bigDecimalNum: BigDecimal!
+  bigDecimalArray: [BigDecimal!]!
 }

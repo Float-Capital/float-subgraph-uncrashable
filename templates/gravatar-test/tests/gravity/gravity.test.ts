@@ -11,13 +11,8 @@ import {
   createNewGravatarEvent,
   createUpdateGravatarEvent,
 } from "./utils";
-import { handleNewGravatar, handleUpdatedGravatar } from "../../src/mapping";
+import { handleUpdatedGravatar } from "../../src/mapping";
 import { BigDecimal } from "@graphprotocol/graph-ts";
-
-// Coverage
-export { handleUpdatedGravatar, handleNewGravatar };
-// IPFS
-export { processGravatar } from "./utils";
 
 let GRAVATAR_ENTITY_TYPE = "Gravatar";
 let TEST_ENTITY_TYPE = "TestEntity";
@@ -71,7 +66,7 @@ describe("Mocked Events", () => {
     assert.fieldEquals(
       TEST_ENTITY_TYPE,
       "name-0",
-      "num",
+      "bigDecimalNum",
       BigDecimal.zero().toString()
     );
 

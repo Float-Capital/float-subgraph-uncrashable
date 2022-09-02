@@ -38,18 +38,6 @@ export function saveGravatarFromContract(gravatarId: string): void {
   gravatar.save();
 }
 
-export function trySaveGravatarFromContract(gravatarId: string): void {
-  let contractGravatar = contract.try_getGravatar(contractAddress);
-
-  if (!contractGravatar.reverted) {
-    let gravatar = new Gravatar(gravatarId);
-    gravatar.displayName = "Gravatar 48 new";
-    gravatar.imageUrl = "https://example.com/image48_new.png";
-    gravatar.owner = contractAddress;
-    gravatar.save();
-  }
-}
-
 export function createNewGravatarEvent(
   id: i32,
   ownerAddress: string,
@@ -108,48 +96,4 @@ export function createUpdateGravatarEvent(
   updatedGravatarEvent.parameters.push(imageUrlParam);
 
   return updatedGravatarEvent;
-}
-
-export function processGravatar(value: JSONValue, userData: Value): void {
-  // See the JSONValue documentation for details on dealing
-  // with JSON values
-  let obj = value.toObject();
-  let id = obj.get("id");
-  let owner = obj.get("owner");
-  let imageUrl = obj.get("imageUrl");
-
-  if (!id || !imageUrl || !owner) {
-    return;
-  }
-
-  // Callbacks can also created entities
-  let gravatar = new Gravatar(id.toString());
-  gravatar.displayName = userData.toString() + id.toString();
-  gravatar.imageUrl = imageUrl.toString();
-  gravatar.owner = Address.fromString(owner.toString());
-  gravatar.save();
-}
-
-export function gravatarFromIpfs(): void {
-  let rawData = ipfs.cat("ipfsCatFileHash");
-
-  if (!rawData) {
-    return;
-  }
-
-  let jsonData = json.fromBytes(rawData as Bytes).toObject();
-
-  let id = jsonData.get("id");
-  let imageUrl = jsonData.get("imageUrl");
-  let owner = jsonData.get("owner");
-
-  if (!id || !imageUrl || !owner) {
-    return;
-  }
-
-  let gravatar = new Gravatar(id.toString());
-  gravatar.imageUrl = imageUrl.toString();
-  gravatar.owner = Address.fromString(owner.toString());
-  gravatar.displayName = "Gravatar " + id.toString();
-  gravatar.save();
 }
