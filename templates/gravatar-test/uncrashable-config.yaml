@@ -1,0 +1,47 @@
+networkConfig:
+  entityIdPrefixes:
+    - networks:
+        - mainnet
+      prefix: ""
+    - networks:
+        - ganache
+      prefix: local
+entitySettings:
+  Gravatar:
+    useDefault:
+      testEntities: {}
+    setters:
+      - name: updateGravatar
+        fields:
+          - owner
+          - displayName
+          - imageUrl
+      - name: setOwner
+        fields:
+          - owner
+      - name: setDisplayName
+        fields:
+          - displayName
+      - name: setImageUrl
+        fields:
+          - imageUrl
+      - name: setTestEntities
+        fields:
+          - testEntities
+    entityId:
+      - name: gravityId
+        type: BigInt
+  TestEntity:
+    useDefault: {}
+    entityId:
+      - name: randomId
+        type: String
+      - name: num
+        type: BigDecimal
+  TestEntity2:
+    useDefault: {}
+    entityId:
+      - name: randomId
+        type: String
+      - name: num
+        type: BigDecimal
