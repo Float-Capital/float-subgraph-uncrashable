@@ -1,0 +1,29 @@
+{
+  "unversionedId": "overview",
+  "id": "overview",
+  "title": "Overview",
+  "description": "NOTE: These docs are under active development 👷‍♀️👷",
+  "source": "@site/docs/overview.md",
+  "sourceDirName": ".",
+  "slug": "/overview",
+  "permalink": "/docs/overview",
+  "draft": false,
+  "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/docs/overview.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "overview",
+    "title": "Overview",
+    "sidebar_label": "Overview",
+    "slug": "/overview"
+  },
+  "sidebar": "someSidebar",
+  "previous": {
+    "title": "Welcome",
+    "permalink": "/docs/"
+  },
+  "next": {
+    "title": "Installation",
+    "permalink": "/docs/installation"
+  }
+}

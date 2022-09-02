@@ -1,0 +1,29 @@
+{
+  "unversionedId": "configuration",
+  "id": "configuration",
+  "title": "Configuration",
+  "description": "NOTE: These docs are under active development 👷‍♀️👷",
+  "source": "@site/docs/configuration.md",
+  "sourceDirName": ".",
+  "slug": "/configuration",
+  "permalink": "/docs/configuration",
+  "draft": false,
+  "editUrl": "https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/docs/configuration.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "configuration",
+    "title": "Configuration",
+    "sidebar_label": "Configuration",
+    "slug": "/configuration"
+  },
+  "sidebar": "someSidebar",
+  "previous": {
+    "title": "Installation",
+    "permalink": "/docs/installation"
+  },
+  "next": {
+    "title": "Support",
+    "permalink": "/docs/support"
+  }
+}
