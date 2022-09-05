@@ -3,8 +3,8 @@ const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 module.exports = {
-  title: 'Float Subgraph Uncrashable',
-  tagline: 'Safe Subgraph Code Generation Framework',
+  title: 'Subgraph Uncrashable',
+  tagline: 'a safe subgraph code generation framework',
   url: 'https://float-subgraph-uncrashable.com', //Need to edit
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -22,7 +22,7 @@ module.exports = {
             require.resolve('./sidebars.js'),
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/website/docs',
+            'https://github.com/Float-Capital/float-subgraph-uncrashable/tree/dev/docs/',
         },
         blog: 
           false,
@@ -39,8 +39,7 @@ module.exports = {
       title: "",
       logo: {
         alt: "Float Logo",
-        src: "https://media-float-capital.fra1.cdn.digitaloceanspaces.com/public/img/float-logo-sq-center.svg",
-        href: "https://float.capital/",
+        src: "https://media-float-capital.fra1.cdn.digitaloceanspaces.com/public/img/float-logo-sq-center.svg"
       },
       items: [
          {
@@ -55,7 +54,6 @@ module.exports = {
            label: "Docs",
            position: "left",
          },
-        //{ to: "blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/Float-Capital/float-subgraph-uncrashable",
           label: "GitHub",
@@ -84,7 +82,7 @@ module.exports = {
           items: [
             {
               label: "Discord",
-              href: "https://discord.gg/dqDwgrVYcU",
+              href: "https://discord.gg/float-capital",
             },
             {
               label: "Twitter",
@@ -106,7 +104,7 @@ module.exports = {
           ],
         },
       ],
-        copyright: `Copyright © ${new Date().getFullYear()} Float Subgraph Uncrashable`,
+        copyright: `Copyright © ${new Date().getFullYear()} Subgraph Uncrashable by <a href='https://float.capital'>Float</a>`,
       },
       prism: {
         theme: lightCodeTheme,

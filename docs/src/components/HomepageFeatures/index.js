@@ -4,29 +4,29 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Heading 1',
+    title: 'Continuous Uptime',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam cursus porttitor sem in maximus. Proin viverra mi at massa lacinia dapibus. 
+        Mishandled entities cause subgraphs to crash, which can be very disruptive for projects that are dependent on the graph. Set up helper functions to make your subgraphs “uncrashable” and ensure business continuity. 
       </>
     ),
   },
   {
-    title: 'Heading 2',
+    title: 'Completely Safe',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam cursus porttitor sem in maximus. Proin viverra mi at massa lacinia dapibus. 
+        Common problems seen in subgraph development are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities. Ensure all interactions with entities are completely safe. 
       </>
     ),
   },
   {
-    title: 'Heading 3',
+    title: 'User Configurable',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam cursus porttitor sem in maximus. Proin viverra mi at massa lacinia dapibus. 
+        Set default values and configure the level of security checks that suits your individual project's needs. Be notified when there is a breach of subgraph logic and patch the issue to ensure data accuracy. 
       </>
     ),
   },
