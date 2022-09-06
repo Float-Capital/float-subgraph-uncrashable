@@ -1,17 +1,20 @@
 %%raw(`require('graphql-import-node/register')`)
 
 open GraphEntityGenTemplates
+open UncrashableValidation
 
 @module("path") external dirname: string => string = "dirname"
 @module("path") external resolve: (string,string) => string = "resolve"
 
 @val external requireGqlFile: string => 'a = "require"
 
+exception UncrashableCodegenError({errorMsg: string})
+
 let sourceDir = dirname(CodegenConfig.graphManifest)
 Js.log(sourceDir)
 
 Js.log(CodegenConfig.codegenConfigPath)
-let repoConfigString = Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
+let uncrashableConfigString = Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
 
 let manifestString = Node_fs.readFileAsUtf8Sync(CodegenConfig.graphManifest)
 
@@ -24,10 +27,23 @@ let absolutePathSchema = resolve(sourceDir, schemaPath)
 
 let loadedGraphSchema = requireGqlFile(absolutePathSchema)
  
-
-let repoConfig = Utils.loadYaml(repoConfigString)
+let uncrashableConfig = Utils.loadYaml(uncrashableConfigString)
 
 let entityDefinitions = loadedGraphSchema["definitions"]
+
+let uncrashableConfigErrors = validate(~entityDefinitions, ~uncrashableConfig )
+
+if uncrashableConfigErrors->Js.Array2.length > 0
+{
+   let msg = uncrashableConfigErrors->Js.Array2.reduce((acc, item) => 
+   
+   `${acc}
+    ${item}`
+   ,""
+   )
+
+   Js.Exn.raiseTypeError( msg)
+}
 
 type enumItem
 let enumsMap: Js.Dict.t<enumItem> = Js.Dict.empty()
@@ -136,7 +152,7 @@ let getDefaultValueForType = (~strictMode, ~recersivelyCreateUncreatedEntities, 
 
 type entityIdPrefix = {networks: array<string>, prefix: string}
 let entityPrefixConfig: array<entityIdPrefix> =
-  repoConfig["networkConfig"]["entityIdPrefixes"]->Option.getWithDefault([])
+  uncrashableConfig["networkConfig"]["entityIdPrefixes"]->Option.getWithDefault([])
 
 let entityPrefixDefinition = {
   if entityPrefixConfig->Array.length > 1 {
@@ -198,7 +214,7 @@ let functions =
       fieldsMap->Js.Dict.set(fieldName, field)
     })
     let entityConfig =
-      repoConfig["entitySettings"]
+      uncrashableConfig["entitySettings"]
       ->Js.Dict.get(name)
       ->Option.getWithDefault({"useDefault": Js.Dict.empty(), "entityId": None, "setters": None})
 
