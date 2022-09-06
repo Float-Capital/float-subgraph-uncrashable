@@ -17,7 +17,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Common problems seen in subgraph development are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities. Ensure all interactions with entities are completely safe. 
+        Common problems seen in subgraph development are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities. Ensure all interactions with entities are completely atomic. 
       </>
     ),
   },
@@ -26,7 +26,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Set default values and configure the level of security checks that suits your individual project's needs. Be notified when there is a breach of subgraph logic and patch the issue to ensure data accuracy. 
+        Set default values and configure the level of security checks that suits your individual project's needs. Warning logs are recorded indicating where there is a breach of subgraph logic tp help patch the issue to ensure data accuracy. 
       </>
     ),
   },
