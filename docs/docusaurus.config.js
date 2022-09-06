@@ -1,17 +1,17 @@
-//Need to adjust theme in line with float docs? This is out of the box default 
+
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 module.exports = {
   title: 'Subgraph Uncrashable',
   tagline: 'a safe subgraph code generation framework',
-  url: 'https://float-subgraph-uncrashable.com', //Need to edit
-  baseUrl: '/',
+  url: 'https://float-capital.github.io',
+  baseUrl: '/float-subgraph-uncrashable/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: "float-capital",
-  projectName: "float-subgraph-uncrashable docs",
+  projectName: "float-subgraph-uncrashable",
   presets: [
     [
       'classic',
