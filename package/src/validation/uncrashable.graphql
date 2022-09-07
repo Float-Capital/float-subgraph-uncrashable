@@ -1,10 +1,9 @@
 type UncrashableConfig {
-  networkConfig: [NetworkConfigs]
-  entitySettings: [EntitySettings!]
+  networkConfig: NetworkConfigs!
+  entitySettings: EntitySettings!
 }
 
 type EntitySettings {
-  name: String!
   useDefault: [String]
   setters: [EntitySetters]
   entityId: [EntityId]

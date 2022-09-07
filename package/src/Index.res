@@ -31,7 +31,7 @@ let uncrashableConfig = Utils.loadYaml(uncrashableConfigString)
 
 let entityDefinitions = loadedGraphSchema["definitions"]
 
-let uncrashableConfigErrors = validate(~entityDefinitions, ~uncrashableConfig )
+let uncrashableConfigErrors = validate(~entityDefinitions, ~uncrashableConfig)
 
 if uncrashableConfigErrors->Js.Array2.length > 0
 {

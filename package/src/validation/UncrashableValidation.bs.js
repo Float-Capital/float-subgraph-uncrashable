@@ -18,6 +18,21 @@ var entitiesMap = {};
 
 var configEntityMap = {};
 
+function confirmTypeIsSupported(argType) {
+  switch (argType) {
+    case "BigDecimal" :
+    case "BigInt" :
+    case "Boolean" :
+    case "Bytes" :
+    case "Int" :
+    case "String" :
+    case "constant" :
+        return true;
+    default:
+      return false;
+  }
+}
+
 function getNamedType(name) {
   var uncaught = name.value;
   if (uncaught === "String") {
@@ -40,21 +55,40 @@ function getNamedType(name) {
   }
 }
 
-function validateFieldType(config, field) {
-  var uncaught = field.type.kind;
-  if (uncaught === "NonNullType") {
-    if (Belt_Option.isSome(Js_dict.get(config, field.name.value))) {
-      return ;
-    } else {
-      errors.push("Missing field: " + field.name.value + " in uncrashable-config.yaml");
-      return ;
+function validateFieldType(config, fieldName, _field) {
+  while(true) {
+    var field = _field;
+    var uncaught = field.type.kind;
+    if (uncaught === "NonNullType") {
+      if (Belt_Option.isSome(Js_dict.get(config, fieldName))) {
+        _field = field.type;
+        continue ;
+      }
+      errors.push("Missing field: " + fieldName + " in uncrashable-config.yaml");
+      return [
+              "unhandled",
+              false
+            ];
     }
-  } else if (uncaught === "ListType" || uncaught === "NamedType") {
-    return ;
-  } else {
-    console.log(uncaught);
-    return ;
-  }
+    if (uncaught === "NamedType") {
+      var fieldType = getNamedType(field.type.name);
+      return [
+              fieldType,
+              false
+            ];
+    }
+    if (uncaught !== "ListType") {
+      return [
+              "uncaught",
+              false
+            ];
+    }
+    var match = validateFieldType(config, fieldName, field.type);
+    return [
+            match[0],
+            true
+          ];
+  };
 }
 
 function validateValue(config, rootName) {
@@ -67,11 +101,33 @@ function validateValue(config, rootName) {
   Belt_Array.map(fields, (function (field) {
           var fieldName = field.name.value;
           fieldsMap[fieldName] = field;
-          validateFieldType(config, field);
+          
+        }));
+  Belt_Array.map(Object.keys(fieldsMap), (function (fieldName) {
+          var field = fieldsMap[fieldName];
+          if (Belt_Option.isSome(Js_dict.get(config, fieldName))) {
+            var configEntity = config[fieldName];
+            var match = validateFieldType(config, fieldName, field);
+            var fieldType = match[0];
+            if (match[1]) {
+              if (configEntity.length !== 0) {
+                Belt_Array.map(configEntity, (function (listItem) {
+                        validateValue(listItem, fieldType);
+                        
+                      }));
+              } else {
+                errors.push("Missing elements for field: " + fieldName + " in uncrashable-config.yaml");
+              }
+            } else {
+              validateValue(configEntity, fieldType);
+            }
+            return ;
+          }
+          validateFieldType(config, fieldName, field);
           
         }));
   Belt_Array.map(Object.keys(config), (function (entityName) {
-          if (Belt_Option.isSome(Js_dict.get(fieldsMap, entityName))) {
+          if (Belt_Option.isSome(Js_dict.get(fieldsMap, entityName)) || Belt_Option.isSome(Js_dict.get(entitiesMap, entityName))) {
             return ;
           } else {
             errors.push("Unexpected field: " + entityName + " in uncrashable-config.yaml");
@@ -105,15 +161,30 @@ function validateSchema(config) {
                   Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(configEntity, "setters"), (function (setterFunctions) {
                               Belt_Array.map(setterFunctions, (function (setter) {
                                       var functionName = setter.name;
-                                      var functionSetterFields = setter.fields;
-                                      Belt_Array.map(functionSetterFields, (function (field) {
-                                              if (Belt_Option.isSome(Js_dict.get(fieldsMap, field))) {
-                                                return ;
-                                              } else {
-                                                errors.push("Unexpected field " + field + " in setter: " + functionName + ", entity: " + entityName);
-                                                return ;
-                                              }
-                                            }));
+                                      var functionSetterFields = Belt_Option.getWithDefault(setter.fields, []);
+                                      if (Array.isArray(functionSetterFields) && functionSetterFields.length !== 0) {
+                                        Belt_Array.map(functionSetterFields, (function (field) {
+                                                if (Belt_Option.isSome(Js_dict.get(fieldsMap, field))) {
+                                                  return ;
+                                                } else {
+                                                  errors.push("Unexpected field " + field + " in setter: " + functionName + ", entity: " + entityName);
+                                                  return ;
+                                                }
+                                              }));
+                                      } else {
+                                        errors.push("Missing setter fields for " + functionName + ", entity: " + entityName);
+                                      }
+                                      
+                                    }));
+                              
+                            })), undefined);
+                  Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(configEntity, "entityId"), (function (idArgs) {
+                              Belt_Array.map(idArgs, (function (arg) {
+                                      var argType = Belt_Option.getWithDefault(arg.type, "");
+                                      if (!confirmTypeIsSupported(argType)) {
+                                        errors.push("Unsupported entityId type " + argType + ", variable name: " + arg.name + ", entity: " + entityName);
+                                        return ;
+                                      }
                                       
                                     }));
                               
@@ -162,6 +233,7 @@ exports.enumsMap = enumsMap;
 exports.interfacesMap = interfacesMap;
 exports.entitiesMap = entitiesMap;
 exports.configEntityMap = configEntityMap;
+exports.confirmTypeIsSupported = confirmTypeIsSupported;
 exports.getNamedType = getNamedType;
 exports.validateFieldType = validateFieldType;
 exports.validateValue = validateValue;
