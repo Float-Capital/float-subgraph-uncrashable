@@ -1,9 +1,5 @@
 name: Compile Rescript & Test template graphs - CI
-# on: pull_request TODO
-on:
-  push:
-    branches:
-      - dp/ci-gravatar-tests
+on: pull_request
 jobs:
   publish:
     name: Compile & Test
