@@ -9,14 +9,11 @@ var JsYaml = require("js-yaml");
 var Belt_Array = require("rescript/lib/js/belt_Array.js");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var CodegenConfig = require("./CodegenConfig.bs.js");
-var Caml_exceptions = require("rescript/lib/js/caml_exceptions.js");
 var UncrashableValidation = require("./validation/UncrashableValidation.bs.js");
 var GraphEntityGenTemplates = require("./GraphEntityGenTemplates.bs.js");
 
 require('graphql-import-node/register')
 ;
-
-var UncrashableCodegenError = /* @__PURE__ */Caml_exceptions.create("Index.UncrashableCodegenError");
 
 var sourceDir = Path.dirname(CodegenConfig.graphManifest);
 
@@ -332,7 +329,6 @@ Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "EntityHelpers.ts", GraphE
 
 var dir = CodegenConfig.outputEntityFilePath;
 
-exports.UncrashableCodegenError = UncrashableCodegenError;
 exports.sourceDir = sourceDir;
 exports.uncrashableConfigString = uncrashableConfigString;
 exports.manifestString = manifestString;
