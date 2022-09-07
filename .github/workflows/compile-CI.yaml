@@ -6,7 +6,7 @@ on:
       - dp/ci-gravatar-tests
 jobs:
   publish:
-    name: Compile
+    name: Compile & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,7 +15,13 @@ jobs:
           node-version: 16
       - run: cd package && yarn
       - run: cd package && yarn res:build
+      - name: Cache graph node_modules
+        id: cache_graph
+        uses: actions/cache@v2
+        with:
+          path: ./graph/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('graph/yarn.lock') }}
       - run: cd templates/gravatar-test && yarn
       - run: cd templates/gravatar-test && yarn codegen
-      - run: cd templates/gravatar-test && yarn uncrashable-dev
+      - run: cd templates/gravatar-test && yarn uncrashable-dev-action
       - run: cd templates/gravatar-test && yarn test
