@@ -1,0 +1,11 @@
+{
+  "output": "generated/live/xdai/nfts.",
+  "chain": "xdai",
+  "datasources": [
+    { "startBlock": 0, "module": "erc721"  },
+    { "startBlock": 0, "module": "erc1155" }
+  ],
+  "deploy": [
+    { "type": "hosted-service", "name": "amxx/nft-xdai" }
+  ]
+}

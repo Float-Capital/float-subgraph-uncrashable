@@ -1,0 +1,28 @@
+[{
+  "name": "Account",
+  "fields": [
+    { "name": "id",                   "type": "Bytes!"                                              },
+    { "name": "asOwnable",            "type": "Ownable"                                             },
+    { "name": "ownerOf",              "type": "Ownable!",                    "derived": "owner"     },
+    { "name": "ownershipTransferred", "type": "OwnershipTransferred!",       "derived": "owner"     }
+  ]
+},{
+  "name": "Ownable",
+  "fields": [
+    { "name": "id",                   "type": "Bytes!"                                              },
+    { "name": "asAccount" ,           "type": "Account!"                                            },
+    { "name": "owner",                "type": "Account!"                                            },
+    { "name": "ownershipTransferred", "type": "OwnershipTransferred!",       "derived": "contract"  }
+  ]
+},{
+  "name": "OwnershipTransferred",
+  "parent": "Event",
+  "immutable": true,
+  "fields": [
+    { "name": "emitter",              "type": "Account!"                                            },
+    { "name": "transaction",          "type": "Transaction!"                                        },
+    { "name": "timestamp",            "type": "BigInt!"                                             },
+    { "name": "contract",             "type": "Ownable!"                                            },
+    { "name": "owner",                "type": "Account!"                                            }
+  ]
+}]

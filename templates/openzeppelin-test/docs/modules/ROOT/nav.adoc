@@ -1,0 +1,4 @@
+* xref:index.adoc[Overview]
+* xref:generate.adoc[Automatic generation]
+* xref:examples/subgraph.adoc[Subgraph examples]
+* xref:examples/query.adoc[Query examples]

@@ -1,0 +1,40 @@
+{
+  "name": "@openzeppelin/subgraphs",
+  "description": "Subgraph templates for @openzeppelin/contracts",
+  "version": "0.1.8-5",
+  "author": "OpenZeppelin Community <maintainers@openzeppelin.org>",
+  "license": "MIT",
+  "homepage": "https://github.com/OpenZeppelin/openzeppelin-subgraphs.git#readme",
+  "files": [
+    "generated/schema.ts",
+    "generated/*.graphql",
+    "generated/**/*.ts",
+    "src",
+    "CHANGELOG.md",
+    "LICENCE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenZeppelin/openzeppelin-subgraphs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OpenZeppelin/openzeppelin-subgraphs.git/issues"
+  },
+  "scripts": {
+    "docs": "oz-docs",
+    "docs:watch": "npm run docs watch",
+    "prepublish": "rimraf artifacts build cache generated",
+    "prepare": "bash scripts/prepare.sh",
+    "test": "bash scripts/test.sh"
+  },
+  "dependencies": {
+    "@amxx/graphprotocol-utils": "^1.1.0",
+    "@openzeppelin/contracts": "^4.6.0"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.29.2",
+    "@graphprotocol/graph-ts": "^0.26.0",
+    "@openzeppelin/docs-utils": "github:OpenZeppelin/docs-preview-script"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "output": "generated/live/mainnet/admin.",
+  "chain": "mainnet",
+  "datasources": [
+    { "startBlock": 2926212, "module": "ownable"        },
+    { "startBlock": 5375569, "module": "erc1967upgrade" },
+    { "startBlock": 9857098, "module": "accesscontrol"  }
+  ],
+  "deploy": [
+    { "type": "hosted-service", "name": "amxx/access-control" }
+  ]
+}

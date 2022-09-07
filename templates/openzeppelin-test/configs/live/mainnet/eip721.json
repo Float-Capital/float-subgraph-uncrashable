@@ -1,0 +1,10 @@
+{
+  "output": "generated/live/mainnet/eip721.",
+  "chain": "mainnet",
+  "datasources": [
+    { "startBlock": 5806610, "module": "erc721" }
+  ],
+  "deploy": [
+    { "type": "hosted-service", "name": "amxx/eip721-subgraph" }
+  ]
+}

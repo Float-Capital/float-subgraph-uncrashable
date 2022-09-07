@@ -1,0 +1,31 @@
+type Account @entity {
+	id: Bytes!
+	asPausable: Pausable
+	events: [Event!]! @derivedFrom(field: "emitter")
+}
+type Pausable @entity {
+	id: Bytes!
+	asAccount: Account!
+	isPaused: Boolean!
+	paused: [Paused!]! @derivedFrom(field: "contract")
+}
+type Paused implements Event @entity(immutable: true) {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: Pausable!
+	isPaused: Boolean!
+}
+interface Event {
+	id: ID!
+	transaction: Transaction!
+	emitter: Account!
+	timestamp: BigInt!
+}
+type Transaction @entity(immutable: true) {
+	id: ID!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+	events: [Event!]! @derivedFrom(field: "transaction")
+}
