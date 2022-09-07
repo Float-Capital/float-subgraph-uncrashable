@@ -1,4 +1,4 @@
-name: Compile Rescript & Test template graphs - CI
+name: Compile Rescript & Test template graphsg - CI
 # on: pull_request TODO
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./templates/gravatar-test/node_modules
-          key: ${{ runner.os }}-modules-${{ hashFiles('graph/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('./templates/gravatar-test/yarn.lock') }}
       - name: install graph packages
         if: steps.cache_graph.outputs.cache-hit != 'true'
         id: install_node_packages_graph
