@@ -23,5 +23,5 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('graph/yarn.lock') }}
       - run: cd templates/gravatar-test && yarn
       - run: cd templates/gravatar-test && yarn codegen
-      - run: cd templates/gravatar-test && yarn uncrashable-dev-action
+      - run: cd templates/gravatar-test && yarn uncrashable-codegen #TODO
       - run: cd templates/gravatar-test && yarn test
