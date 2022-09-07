@@ -15,10 +15,6 @@ jobs:
           node-version: 16
       - run: cd package && yarn
       - run: cd package && yarn res:build
-      - run: | 
-        cd templates/gravatar-test && yarn
-        cd templates/gravatar-test && yarn build-contract
-        cd templates/gravatar-test && yarn test
-        
-        
-        
+      - run: cd templates/gravatar-test && yarn
+      - run: cd templates/gravatar-test && yarn build-contract
+      - run: cd templates/gravatar-test && yarn test
