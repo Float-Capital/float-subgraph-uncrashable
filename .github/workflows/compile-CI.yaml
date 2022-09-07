@@ -1,5 +1,9 @@
 name: Compile Rescript - CI
-on: pull_request
+# on: pull_request TODO
+on:
+  push:
+    branches:
+      - dp/ci-gravatar-tests
 jobs:
   publish:
     name: Compile
@@ -11,3 +15,10 @@ jobs:
           node-version: 16
       - run: cd package && yarn
       - run: cd package && yarn res:build
+      - run: | 
+        cd templates/gravatar-test && yarn
+        cd templates/gravatar-test && yarn build-contract
+        cd templates/gravatar-test && yarn test
+        
+        
+        
