@@ -11,18 +11,16 @@ let entitiesMap: Js.Dict.t<entityItem> = Js.Dict.empty()
 type configEntityItem
 let configEntityMap: Js.Dict.t<configEntityItem> = Js.Dict.empty()
 
-
 let confirmTypeIsSupported = argType => {
   switch argType {
-  | "String" 
-  | "Int" 
-  | "BigInt" 
-  | "Bytes" 
-  | "Boolean" 
+  | "String"
+  | "Int"
+  | "BigInt"
+  | "Bytes"
+  | "Boolean"
   | "constant"
   | "BigDecimal" => true
-  | uncaught =>
-    false
+  | uncaught => false
   }
 }
 
@@ -56,19 +54,13 @@ let rec validateFieldType = (~config, ~fieldName, field) => {
     let (fieldType, _) = field["type"]->validateFieldType(~config, ~fieldName)
     (fieldType, true)
 
-  | #NonNullType => {
-      if config->Js.Dict.get(fieldName)->Option.isSome {
-        field["type"]->validateFieldType(~config, ~fieldName)
-      } 
-
-      else {
-        let _ = errors->Js.Array2.push(`Missing field: ${fieldName} in uncrashable-config.yaml`)
-        ("unhandled", false)
-      }
+  | #NonNullType => if config->Js.Dict.get(fieldName)->Option.isSome {
+      field["type"]->validateFieldType(~config, ~fieldName)
+    } else {
+      let _ = errors->Js.Array2.push(`Missing field: ${fieldName} in uncrashable-config.yaml`)
+      ("unhandled", false)
     }
-  | uncaught => {
-      ("uncaught", false)
-    }
+  | uncaught => ("uncaught", false)
   }
 }
 
@@ -93,13 +85,15 @@ let rec validateValue = (~config, ~rootName) => {
           let configEntity = config->Js.Dict.unsafeGet(fieldName)->Obj.magic
           let (fieldType, isList) = field->validateFieldType(~config, ~fieldName)
           if isList {
-
             if configEntity->Array.length > 0 {
-            let _ = configEntity->Array.map(listItem => {
-              let _ = validateValue(~config=listItem, ~rootName=fieldType)
-            })
-            }else {
-              let _ = errors->Js.Array2.push(`Missing elements for field: ${fieldName} in uncrashable-config.yaml`)
+              let _ = configEntity->Array.map(listItem => {
+                let _ = validateValue(~config=listItem, ~rootName=fieldType)
+              })
+            } else {
+              let _ =
+                errors->Js.Array2.push(
+                  `Missing elements for field: ${fieldName} in uncrashable-config.yaml`,
+                )
             }
           } else {
             let _ = validateValue(~config=configEntity, ~rootName=fieldType)
@@ -115,12 +109,10 @@ let rec validateValue = (~config, ~rootName) => {
       ->Array.map(entityName => {
         if fieldsMap->Js.Dict.get(entityName)->Option.isSome {
           ()
-          
-        } 
-        else if entitiesMap->Js.Dict.get(entityName)->Option.isSome{
-        //handle the case where its an entity name 
-       ()
-      }else {
+        } else if entitiesMap->Js.Dict.get(entityName)->Option.isSome {
+          //handle the case where its an entity name
+          ()
+        } else {
           let _ =
             errors->Js.Array2.push(`Unexpected field: ${entityName} in uncrashable-config.yaml`)
         }
@@ -165,42 +157,44 @@ let validateSchema = (~config) => {
               let functions = setterFunctions->Array.map(setter => {
                 let functionName = setter["name"]
                 let functionSetterFields = setter["fields"]->Option.getWithDefault([])
-                if functionSetterFields->Js.Array.isArray && functionSetterFields->Array.length >0 {
-                let fieldTypeDef = functionSetterFields->Array.map(field => {
-                  if fieldsMap->Js.Dict.get(field)->Option.isSome {
-                    ()
-                  } else {
-                    let _ =
-                      errors->Js.Array2.push(
-                        `Unexpected field ${field} in setter: ${functionName}, entity: ${entityName}`,
-                      )
-                  }
-                })}
-                else {
+                if (
+                  functionSetterFields->Js.Array.isArray && functionSetterFields->Array.length > 0
+                ) {
+                  let fieldTypeDef = functionSetterFields->Array.map(field => {
+                    if fieldsMap->Js.Dict.get(field)->Option.isSome {
+                      ()
+                    } else {
+                      let _ =
+                        errors->Js.Array2.push(
+                          `Unexpected field ${field} in setter: ${functionName}, entity: ${entityName}`,
+                        )
+                    }
+                  })
+                } else {
                   let _ =
-                      errors->Js.Array2.push(
-                        `Missing setter fields for ${functionName}, entity: ${entityName}`,)
-                    
-
+                    errors->Js.Array2.push(
+                      `Missing setter fields for ${functionName}, entity: ${entityName}`,
+                    )
                 }
-               })
+              })
             })
             ->Option.getWithDefault()
 
-            let _ =
-      configEntity->Js.Dict.get("entityId")
-      ->Option.map(idArgs => {
-        let idString = idArgs->Array.map(arg => {
-          let  argType= arg["type"]->Option.getWithDefault("")
-          if(!confirmTypeIsSupported(argType)){
-                let _ =
-                      errors->Js.Array2.push(
-                        `Unsupported entityId type ${argType}, variable name: ${arg["name"]}, entity: ${entityName}`,)
-          }
-        })
-        
-      })
-      ->Option.getWithDefault()
+          let _ =
+            configEntity
+            ->Js.Dict.get("entityId")
+            ->Option.map(idArgs => {
+              let idString = idArgs->Array.map(arg => {
+                let argType = arg["type"]->Option.getWithDefault("")
+                if !confirmTypeIsSupported(argType) {
+                  let _ =
+                    errors->Js.Array2.push(
+                      `Unsupported entityId type ${argType}, variable name: ${arg["name"]}, entity: ${entityName}`,
+                    )
+                }
+              })
+            })
+            ->Option.getWithDefault()
         })
     })
 }
