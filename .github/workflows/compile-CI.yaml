@@ -16,5 +16,6 @@ jobs:
       - run: cd package && yarn
       - run: cd package && yarn res:build
       - run: cd templates/gravatar-test && yarn
-      - run: cd templates/gravatar-test && yarn build-contract
+      - run: cd templates/gravatar-test && yarn codegen
+      - run: cd templates/gravatar-test && yarn uncrashable-dev
       - run: cd templates/gravatar-test && yarn test
