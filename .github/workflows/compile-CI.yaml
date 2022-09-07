@@ -1,4 +1,4 @@
-name: Compile Rescript & Test template graphsg - CI
+name: Compile Rescript & Test template graphs - CI
 # on: pull_request TODO
 on:
   push:
