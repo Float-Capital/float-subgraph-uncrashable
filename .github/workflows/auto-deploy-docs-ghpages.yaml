@@ -2,7 +2,7 @@ name: Deploy docs to ghpages - CD
 on:
   push:
     branches:
-      - dp/docs-cd # TODO
+      - main
 permissions:
   contents: write
 jobs:
