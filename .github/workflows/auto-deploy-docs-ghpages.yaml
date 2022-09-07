@@ -3,14 +3,21 @@ on:
   push:
     branches:
       - dp/docs-cd # TODO
+permissions:
+  contents: write
 jobs:
-  publish:
-    name: Deploy Docs
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Build
+        run: |
+          cd docs && yarn
+          cd docs && yarn build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          node-version: 16
-      - run: cd docs && yarn
-      - run: cd docs && yarn deploy
+          folder: docs/build #defaults to gh-pages branch
