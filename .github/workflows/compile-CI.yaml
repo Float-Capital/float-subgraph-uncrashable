@@ -19,7 +19,7 @@ jobs:
         id: cache_graph
         uses: actions/cache@v2
         with:
-          path: ./graph/node_modules
+          path: ./templates/gravatar-test/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('graph/yarn.lock') }}
       - name: install graph packages
         if: steps.cache_graph.outputs.cache-hit != 'true'
