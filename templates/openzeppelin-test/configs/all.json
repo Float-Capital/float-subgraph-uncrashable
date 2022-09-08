@@ -1,0 +1,19 @@
+{
+  "output": "generated/all.",
+  "datasources": [
+    {
+      "module": [
+        "accesscontrol",
+        "erc1155",
+        "erc1967upgrade",
+        "erc20",
+        "erc721",
+        "governor",
+        "ownable",
+        "pausable",
+        "timelock",
+        "voting"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+type Account @entity {
+	id: Bytes!
+	asOwnable: Ownable
+	ownerOf: [Ownable!]! @derivedFrom(field: "owner")
+	ownershipTransferred: [OwnershipTransferred!]! @derivedFrom(field: "owner")
+	events: [Event!]! @derivedFrom(field: "emitter")
+}
+type Ownable @entity {
+	id: Bytes!
+	asAccount: Account!
+	owner: Account!
+	ownershipTransferred: [OwnershipTransferred!]! @derivedFrom(field: "contract")
+}
+type OwnershipTransferred implements Event @entity(immutable: true) {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: Ownable!
+	owner: Account!
+}
+interface Event {
+	id: ID!
+	transaction: Transaction!
+	emitter: Account!
+	timestamp: BigInt!
+}
+type Transaction @entity(immutable: true) {
+	id: ID!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+	events: [Event!]! @derivedFrom(field: "transaction")
+}

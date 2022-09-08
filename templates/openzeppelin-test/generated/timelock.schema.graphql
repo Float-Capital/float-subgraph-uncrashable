@@ -1,0 +1,88 @@
+type Account @entity {
+	id: Bytes!
+	asTimelock: Timelock
+	timelockedCalls: [TimelockCall!]! @derivedFrom(field: "target")
+	events: [Event!]! @derivedFrom(field: "emitter")
+}
+type Timelock @entity(immutable: true) {
+	id: Bytes!
+	asAccount: Account!
+	operations: [TimelockOperation!]! @derivedFrom(field: "contract")
+	scheduled: [TimelockOperationScheduled!]! @derivedFrom(field: "contract")
+	executed: [TimelockOperationExecuted!]! @derivedFrom(field: "contract")
+	cancelled: [TimelockOperationCancelled!]! @derivedFrom(field: "contract")
+	mindelaychange: [TimelockMinDelayChange!]! @derivedFrom(field: "contract")
+}
+enum TimelockStatus {
+	SCHEDULED
+	EXECUTED
+	CANCELED
+}
+type TimelockOperation @entity {
+	id: ID!
+	contract: Timelock!
+	status: TimelockStatus!
+	delay: BigInt!
+	timestamp: BigInt!
+	predecessor: TimelockOperation
+	calls: [TimelockCall!]! @derivedFrom(field: "operation")
+	scheduled: [TimelockOperationScheduled!]! @derivedFrom(field: "operation")
+	executed: [TimelockOperationExecuted!]! @derivedFrom(field: "operation")
+	cancelled: [TimelockOperationCancelled!]! @derivedFrom(field: "operation")
+}
+type TimelockCall @entity(immutable: true) {
+	id: ID!
+	operation: TimelockOperation!
+	index: BigInt!
+	target: Account!
+	value: BigDecimal!
+	data: Bytes!
+	scheduled: [TimelockOperationScheduled!]! @derivedFrom(field: "call")
+	executed: [TimelockOperationExecuted!]! @derivedFrom(field: "call")
+}
+type TimelockOperationScheduled implements Event @entity(immutable: true) {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: Timelock!
+	operation: TimelockOperation!
+	call: TimelockCall!
+}
+type TimelockOperationExecuted implements Event @entity(immutable: true) {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: Timelock!
+	operation: TimelockOperation!
+	call: TimelockCall!
+}
+type TimelockOperationCancelled implements Event @entity(immutable: true) {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: Timelock!
+	operation: TimelockOperation!
+}
+type TimelockMinDelayChange implements Event @entity(immutable: true) {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: Timelock!
+	delay: BigInt!
+}
+interface Event {
+	id: ID!
+	transaction: Transaction!
+	emitter: Account!
+	timestamp: BigInt!
+}
+type Transaction @entity(immutable: true) {
+	id: ID!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+	events: [Event!]! @derivedFrom(field: "transaction")
+}

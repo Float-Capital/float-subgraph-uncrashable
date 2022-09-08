@@ -1,0 +1,12 @@
+{
+  "output": "generated/live/bsc/admin.",
+  "chain": "bsc",
+  "datasources": [
+    { "startBlock": 0, "module": "ownable"        },
+    { "startBlock": 0, "module": "erc1967upgrade" },
+    { "startBlock": 0, "module": "accesscontrol"  }
+  ],
+  "deploy": [
+    { "type": "hosted-service", "name": "amxx/access-control-bsc" }
+  ]
+}
