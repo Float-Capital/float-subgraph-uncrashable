@@ -1,3 +1,10 @@
+# Float Notes
+
+Need to install [jq](https://stedolan.github.io/jq/)
+Mac - `brew install jq`
+
+
+
 # OpenZeppelin Subgraphs
 
 ## Introduction

@@ -26,11 +26,13 @@
     "docs:watch": "npm run docs watch",
     "prepublish": "rimraf artifacts build cache generated",
     "prepare": "bash scripts/prepare.sh",
-    "test": "bash scripts/test.sh"
+    "test": "graph test",
+    "oz-test": "bash scripts/test.sh"
   },
   "dependencies": {
     "@amxx/graphprotocol-utils": "^1.1.0",
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "matchstick-as": "^0.5.0"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.29.2",

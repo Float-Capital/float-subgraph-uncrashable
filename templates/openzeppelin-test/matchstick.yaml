@@ -1,0 +1,3 @@
+manifestPath: generated/all.subgraph.yaml
+# testsFolder: path/to/tests
+# libsFolder: path/to/libs
