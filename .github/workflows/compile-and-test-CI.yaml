@@ -1,0 +1,26 @@
+name: Compile Rescript & Test template graphs - CI
+on: pull_request
+jobs:
+  publish:
+    name: Compile & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: cd package && yarn
+      - run: cd package && yarn res:build
+      - name: Cache graph node_modules
+        id: cache_graph
+        uses: actions/cache@v2
+        with:
+          path: ./templates/gravatar-test/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('./templates/gravatar-test/yarn.lock') }}
+      - name: install graph packages
+        if: steps.cache_graph.outputs.cache-hit != 'true'
+        id: install_node_packages_graph
+        run: cd templates/gravatar-test && yarn
+      - run: cd templates/gravatar-test && yarn codegen
+      - run: cd templates/gravatar-test && yarn uncrashable-dev
+      - run: cd templates/gravatar-test && yarn test
