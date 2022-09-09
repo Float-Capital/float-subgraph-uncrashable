@@ -56,12 +56,15 @@ var entitiesMap = {};
 Belt_Array.forEach(entityDefinitions, (function (entity) {
         var name = entity.name.value;
         var entityKind = entity.kind;
-        if (entityKind === "InterfaceTypeDefinition") {
-          interfacesMap[name] = entity;
-        } else if (entityKind === "ObjectTypeDefinition") {
-          entitiesMap[name] = entity;
-        } else {
-          enumsMap[name] = entity;
+        if (name !== "_Schema_") {
+          if (entityKind === "InterfaceTypeDefinition") {
+            interfacesMap[name] = entity;
+          } else if (entityKind === "ObjectTypeDefinition") {
+            entitiesMap[name] = entity;
+          } else {
+            enumsMap[name] = entity;
+          }
+          return ;
         }
         
       }));

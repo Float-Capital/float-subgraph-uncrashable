@@ -52,10 +52,12 @@ entityDefinitions->Array.forEach(entity => {
 
   let entityKind = entity["kind"]
 
-  let _ = switch entityKind {
-  | #EnumTypeDefinition => enumsMap->Js.Dict.set(name, entity->Obj.magic)
-  | #InterfaceTypeDefinition => interfacesMap->Js.Dict.set(name, entity->Obj.magic)
-  | #ObjectTypeDefinition => entitiesMap->Js.Dict.set(name, entity->Obj.magic)
+  if name != "_Schema_" {
+    let _ = switch entityKind {
+    | #EnumTypeDefinition => enumsMap->Js.Dict.set(name, entity->Obj.magic)
+    | #InterfaceTypeDefinition => interfacesMap->Js.Dict.set(name, entity->Obj.magic)
+    | #ObjectTypeDefinition => entitiesMap->Js.Dict.set(name, entity->Obj.magic)
+    }
   }
 })
 
