@@ -313,8 +313,8 @@ var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (fu
       }));
 
 var entityImports = Belt_Array.joinWith(Belt_Array.map(Belt_Array.keep(entityDefinitions, (function (entity) {
-                if (entity.kind !== "EnumTypeDefinition") {
-                  return entity.kind !== "InterfaceTypeDefinition";
+                if (entity.kind !== "EnumTypeDefinition" && entity.kind !== "InterfaceTypeDefinition") {
+                  return entity.name.value !== "_Schema_";
                 } else {
                   return false;
                 }

@@ -359,7 +359,9 @@ let functions =
 let entityImports =
   entityDefinitions
   ->Array.keep(entity => {
-    entity["kind"] != #EnumTypeDefinition && entity["kind"] != #InterfaceTypeDefinition
+    entity["kind"] != #EnumTypeDefinition &&
+    entity["kind"] != #InterfaceTypeDefinition &&
+    entity["name"]["value"] != "_Schema_"
   })
   ->Array.map(entity => `  ${entity["name"]["value"]}`)
   ->Array.joinWith(",\n", a => a)
