@@ -1,9 +1,10 @@
 %%raw(`require('graphql-import-node/register')`)
 
 open GraphEntityGenTemplates
+open UncrashableValidation
 
 @module("path") external dirname: string => string = "dirname"
-@module("path") external resolve: (string,string) => string = "resolve"
+@module("path") external resolve: (string, string) => string = "resolve"
 
 @val external requireGqlFile: string => 'a = "require"
 
@@ -11,7 +12,7 @@ let sourceDir = dirname(CodegenConfig.graphManifest)
 Js.log(sourceDir)
 
 Js.log(CodegenConfig.codegenConfigPath)
-let repoConfigString = Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
+let uncrashableConfigString = Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
 
 let manifestString = Node_fs.readFileAsUtf8Sync(CodegenConfig.graphManifest)
 
@@ -23,11 +24,21 @@ Js.log(schemaPath)
 let absolutePathSchema = resolve(sourceDir, schemaPath)
 
 let loadedGraphSchema = requireGqlFile(absolutePathSchema)
- 
 
-let repoConfig = Utils.loadYaml(repoConfigString)
+let uncrashableConfig = Utils.loadYaml(uncrashableConfigString)
 
 let entityDefinitions = loadedGraphSchema["definitions"]
+
+let uncrashableConfigErrors = validate(~entityDefinitions, ~uncrashableConfig)
+
+if uncrashableConfigErrors->Js.Array2.length > 0 {
+  let msg = uncrashableConfigErrors->Js.Array2.reduce((acc, item) =>
+    `${acc}
+    ${item}`
+  , "")
+
+  Js.Exn.raiseTypeError(msg)
+}
 
 type enumItem
 let enumsMap: Js.Dict.t<enumItem> = Js.Dict.empty()
@@ -136,7 +147,7 @@ let getDefaultValueForType = (~strictMode, ~recersivelyCreateUncreatedEntities, 
 
 type entityIdPrefix = {networks: array<string>, prefix: string}
 let entityPrefixConfig: array<entityIdPrefix> =
-  repoConfig["networkConfig"]["entityIdPrefixes"]->Option.getWithDefault([])
+  uncrashableConfig["networkConfig"]["entityIdPrefixes"]->Option.getWithDefault([])
 
 let entityPrefixDefinition = {
   if entityPrefixConfig->Array.length > 1 {
@@ -198,7 +209,7 @@ let functions =
       fieldsMap->Js.Dict.set(fieldName, field)
     })
     let entityConfig =
-      repoConfig["entitySettings"]
+      uncrashableConfig["entitySettings"]
       ->Js.Dict.get(name)
       ->Option.getWithDefault({"useDefault": Js.Dict.empty(), "entityId": None, "setters": None})
 
@@ -256,7 +267,10 @@ let functions =
         fieldsWithDefaultValueLookup
         ->Js.Dict.get(fieldName)
         ->Option.mapWithDefault(
-          setFieldNameToFieldType(~fieldName, ~fieldType=field["type"]->getFieldType(~entityAsIdString=true)),
+          setFieldNameToFieldType(
+            ~fieldName,
+            ~fieldType=field["type"]->getFieldType(~entityAsIdString=true),
+          ),
           _ => "",
         )
       }
@@ -348,19 +362,14 @@ let entityImports =
   ->Array.map(entity => `  ${entity["name"]["value"]}`)
   ->Array.joinWith(",\n", a => a)
 
-let dir = `${CodegenConfig.outputEntityFilePath}`;
-
+let dir = CodegenConfig.outputEntityFilePath
 
 @module("fs")
-external mkdirSync: (
-  ~dir: string,
-) => unit = "mkdirSync"
+external mkdirSync: (~dir: string) => unit = "mkdirSync"
 
-
-if (!Node_fs.existsSync(dir)){
-    mkdirSync(~dir);
+if !Node_fs.existsSync(dir) {
+  mkdirSync(~dir)
 }
-
 
 Node_fs.writeFileAsUtf8Sync(
   `${CodegenConfig.outputEntityFilePath}EntityHelpers.ts`,
