@@ -52,10 +52,12 @@ entityDefinitions->Array.forEach(entity => {
 
   let entityKind = entity["kind"]
 
-  let _ = switch entityKind {
-  | #EnumTypeDefinition => enumsMap->Js.Dict.set(name, entity->Obj.magic)
-  | #InterfaceTypeDefinition => interfacesMap->Js.Dict.set(name, entity->Obj.magic)
-  | #ObjectTypeDefinition => entitiesMap->Js.Dict.set(name, entity->Obj.magic)
+  if name != "_Schema_" {
+    let _ = switch entityKind {
+    | #EnumTypeDefinition => enumsMap->Js.Dict.set(name, entity->Obj.magic)
+    | #InterfaceTypeDefinition => interfacesMap->Js.Dict.set(name, entity->Obj.magic)
+    | #ObjectTypeDefinition => entitiesMap->Js.Dict.set(name, entity->Obj.magic)
+    }
   }
 })
 
@@ -357,7 +359,9 @@ let functions =
 let entityImports =
   entityDefinitions
   ->Array.keep(entity => {
-    entity["kind"] != #EnumTypeDefinition && entity["kind"] != #InterfaceTypeDefinition
+    entity["kind"] != #EnumTypeDefinition &&
+    entity["kind"] != #InterfaceTypeDefinition &&
+    entity["name"]["value"] != "_Schema_"
   })
   ->Array.map(entity => `  ${entity["name"]["value"]}`)
   ->Array.joinWith(",\n", a => a)

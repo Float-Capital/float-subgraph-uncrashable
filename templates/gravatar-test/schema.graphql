@@ -20,3 +20,20 @@ type TestEntity2 @entity {
   bigDecimalNum: BigDecimal!
   bigDecimalArray: [BigDecimal!]!
 }
+
+type _Schema_
+  @fulltext(
+    name: "gravatarSearch"
+    language: en
+    algorithm: rank
+    include: [
+      {
+        entity: "Gravatar"
+        fields: [
+          { name: "displayName" }
+          { name: "owner" }
+          { name: "imageUrl" }
+        ]
+      }
+    ]
+  )

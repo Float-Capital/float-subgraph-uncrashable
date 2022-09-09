@@ -56,12 +56,15 @@ var entitiesMap = {};
 Belt_Array.forEach(entityDefinitions, (function (entity) {
         var name = entity.name.value;
         var entityKind = entity.kind;
-        if (entityKind === "InterfaceTypeDefinition") {
-          interfacesMap[name] = entity;
-        } else if (entityKind === "ObjectTypeDefinition") {
-          entitiesMap[name] = entity;
-        } else {
-          enumsMap[name] = entity;
+        if (name !== "_Schema_") {
+          if (entityKind === "InterfaceTypeDefinition") {
+            interfacesMap[name] = entity;
+          } else if (entityKind === "ObjectTypeDefinition") {
+            entitiesMap[name] = entity;
+          } else {
+            enumsMap[name] = entity;
+          }
+          return ;
         }
         
       }));
@@ -310,8 +313,8 @@ var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (fu
       }));
 
 var entityImports = Belt_Array.joinWith(Belt_Array.map(Belt_Array.keep(entityDefinitions, (function (entity) {
-                if (entity.kind !== "EnumTypeDefinition") {
-                  return entity.kind !== "InterfaceTypeDefinition";
+                if (entity.kind !== "EnumTypeDefinition" && entity.kind !== "InterfaceTypeDefinition") {
+                  return entity.name.value !== "_Schema_";
                 } else {
                   return false;
                 }

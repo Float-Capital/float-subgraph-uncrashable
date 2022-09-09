@@ -66,3 +66,5 @@ typings/
 data
 
 .bin
+
+*.latest.json
