@@ -3,11 +3,13 @@
 
 var Fs = require("fs");
 var Path = require("path");
+var Js_exn = require("rescript/lib/js/js_exn.js");
 var Js_dict = require("rescript/lib/js/js_dict.js");
 var JsYaml = require("js-yaml");
 var Belt_Array = require("rescript/lib/js/belt_Array.js");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var CodegenConfig = require("./CodegenConfig.bs.js");
+var UncrashableValidation = require("./validation/UncrashableValidation.bs.js");
 var GraphEntityGenTemplates = require("./GraphEntityGenTemplates.bs.js");
 
 require('graphql-import-node/register')
@@ -19,7 +21,7 @@ console.log(sourceDir);
 
 console.log(CodegenConfig.codegenConfigPath);
 
-var repoConfigString = Fs.readFileSync(CodegenConfig.codegenConfigPath, "utf8");
+var uncrashableConfigString = Fs.readFileSync(CodegenConfig.codegenConfigPath, "utf8");
 
 var manifestString = Fs.readFileSync(CodegenConfig.graphManifest, "utf8");
 
@@ -33,9 +35,17 @@ var absolutePathSchema = Path.resolve(sourceDir, schemaPath);
 
 var loadedGraphSchema = require(absolutePathSchema);
 
-var repoConfig = JsYaml.load(repoConfigString);
+var uncrashableConfig = JsYaml.load(uncrashableConfigString);
 
 var entityDefinitions = loadedGraphSchema.definitions;
+
+var uncrashableConfigErrors = UncrashableValidation.validate(entityDefinitions, uncrashableConfig);
+
+if (uncrashableConfigErrors.length > 0) {
+  Js_exn.raiseTypeError(uncrashableConfigErrors.reduce((function (acc, item) {
+              return acc + "\n    " + item;
+            }), ""));
+}
 
 var enumsMap = {};
 
@@ -46,12 +56,15 @@ var entitiesMap = {};
 Belt_Array.forEach(entityDefinitions, (function (entity) {
         var name = entity.name.value;
         var entityKind = entity.kind;
-        if (entityKind === "InterfaceTypeDefinition") {
-          interfacesMap[name] = entity;
-        } else if (entityKind === "ObjectTypeDefinition") {
-          entitiesMap[name] = entity;
-        } else {
-          enumsMap[name] = entity;
+        if (name !== "_Schema_") {
+          if (entityKind === "InterfaceTypeDefinition") {
+            interfacesMap[name] = entity;
+          } else if (entityKind === "ObjectTypeDefinition") {
+            entitiesMap[name] = entity;
+          } else {
+            enumsMap[name] = entity;
+          }
+          return ;
         }
         
       }));
@@ -62,6 +75,8 @@ function getNamedType(entityAsIdString, name) {
     return "string";
   } else if (uncaught === "Boolean") {
     return "boolean";
+  } else if (uncaught === "BigDecimal") {
+    return "BigDecimal";
   } else if (uncaught === "Bytes") {
     return "Bytes";
   } else if (uncaught === "Int") {
@@ -136,11 +151,10 @@ function getFieldValueToSave(nameOfObject, field) {
   var match = getFieldSetterType(field.type);
   switch (match) {
     case /* NormalValue */0 :
-        return nameOfObject + "." + field.name.value;
     case /* Entity */1 :
-        return nameOfObject + "." + field.name.value + ".id";
+        return nameOfObject + "." + field.name.value;
     case /* EntityArray */2 :
-        return "entityArrayToIdArray(" + nameOfObject + "." + field.name.value + ")";
+        return "(" + nameOfObject + "." + field.name.value + ")";
     
   }
 }
@@ -159,7 +173,7 @@ function getDefaultValueForType(strictMode, recersivelyCreateUncreatedEntities, 
               }));
 }
 
-var entityPrefixConfig = Belt_Option.getWithDefault(repoConfig.networkConfig.entityIdPrefixes, []);
+var entityPrefixConfig = Belt_Option.getWithDefault(uncrashableConfig.networkConfig.entityIdPrefixes, []);
 
 var entityPrefixDefinition = entityPrefixConfig.length > 1 ? "  if " + Belt_Array.joinWith(Belt_Array.map(entityPrefixConfig, (function (param) {
               return "(" + Belt_Array.joinWith(Belt_Array.map(param.networks, (function (network) {
@@ -214,7 +228,7 @@ var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (fu
                     fieldsMap[fieldName] = field;
                     
                   }));
-            var entityConfig = Belt_Option.getWithDefault(Js_dict.get(repoConfig.entitySettings, name), {
+            var entityConfig = Belt_Option.getWithDefault(Js_dict.get(uncrashableConfig.entitySettings, name), {
                   useDefault: {},
                   entityId: undefined,
                   setters: undefined
@@ -247,7 +261,7 @@ var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (fu
               if (fieldName === "id") {
                 return "";
               } else {
-                return Belt_Option.mapWithDefault(Js_dict.get(fieldsWithDefaultValueLookup, fieldName), GraphEntityGenTemplates.setFieldNameToFieldType(fieldName, getFieldType(undefined, field.type)), (function (param) {
+                return Belt_Option.mapWithDefault(Js_dict.get(fieldsWithDefaultValueLookup, fieldName), GraphEntityGenTemplates.setFieldNameToFieldType(fieldName, getFieldType(true, field.type)), (function (param) {
                               return "";
                             }));
               }
@@ -299,8 +313,8 @@ var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (fu
       }));
 
 var entityImports = Belt_Array.joinWith(Belt_Array.map(Belt_Array.keep(entityDefinitions, (function (entity) {
-                if (entity.kind !== "EnumTypeDefinition") {
-                  return entity.kind !== "InterfaceTypeDefinition";
+                if (entity.kind !== "EnumTypeDefinition" && entity.kind !== "InterfaceTypeDefinition") {
+                  return entity.name.value !== "_Schema_";
                 } else {
                   return false;
                 }
@@ -319,14 +333,15 @@ Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "EntityHelpers.ts", GraphE
 var dir = CodegenConfig.outputEntityFilePath;
 
 exports.sourceDir = sourceDir;
-exports.repoConfigString = repoConfigString;
+exports.uncrashableConfigString = uncrashableConfigString;
 exports.manifestString = manifestString;
 exports.manifest = manifest;
 exports.schemaPath = schemaPath;
 exports.absolutePathSchema = absolutePathSchema;
 exports.loadedGraphSchema = loadedGraphSchema;
-exports.repoConfig = repoConfig;
+exports.uncrashableConfig = uncrashableConfig;
 exports.entityDefinitions = entityDefinitions;
+exports.uncrashableConfigErrors = uncrashableConfigErrors;
 exports.enumsMap = enumsMap;
 exports.interfacesMap = interfacesMap;
 exports.entitiesMap = entitiesMap;

@@ -1,0 +1,39 @@
+type Gravatar @entity {
+  id: ID!
+  owner: Bytes!
+  displayName: String!
+  imageUrl: String!
+  testEntities: [TestEntity!]! @derivedFrom(field: "gravatar")
+  testEntitiesTwo: [TestEntity2!]!
+}
+
+type TestEntity @entity {
+  id: ID!
+  text: String!
+  bigDecimalNum: BigDecimal!
+  bigDecimalArray: [BigDecimal!]!
+  gravatar: Gravatar!
+}
+type TestEntity2 @entity {
+  id: ID!
+  text: String!
+  bigDecimalNum: BigDecimal!
+  bigDecimalArray: [BigDecimal!]!
+}
+
+type _Schema_
+  @fulltext(
+    name: "gravatarSearch"
+    language: en
+    algorithm: rank
+    include: [
+      {
+        entity: "Gravatar"
+        fields: [
+          { name: "displayName" }
+          { name: "owner" }
+          { name: "imageUrl" }
+        ]
+      }
+    ]
+  )

@@ -4,3 +4,9 @@ package/lib
 graphql_ppx_cache/
 *.merlin
 .bsb.lock
+
+.env
+
+.DS_Store
+
+.docusaurus

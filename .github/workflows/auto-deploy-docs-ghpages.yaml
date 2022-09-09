@@ -1,0 +1,23 @@
+name: Deploy docs to ghpages - CD
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Build
+        run: |
+          cd docs && yarn
+          cd docs && yarn build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs/build #defaults to gh-pages branch
