@@ -9,11 +9,15 @@ var JsYaml = require("js-yaml");
 var Belt_Array = require("rescript/lib/js/belt_Array.js");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var CodegenConfig = require("./CodegenConfig.bs.js");
+var Caml_exceptions = require("rescript/lib/js/caml_exceptions.js");
+var Caml_js_exceptions = require("rescript/lib/js/caml_js_exceptions.js");
 var UncrashableValidation = require("./validation/UncrashableValidation.bs.js");
 var GraphEntityGenTemplates = require("./GraphEntityGenTemplates.bs.js");
 
 require('graphql-import-node/register')
 ;
+
+var UncrashableFileNotFound = /* @__PURE__ */Caml_exceptions.create("Index.UncrashableFileNotFound");
 
 var sourceDir = Path.dirname(CodegenConfig.graphManifest);
 
@@ -21,7 +25,28 @@ console.log(sourceDir);
 
 console.log(CodegenConfig.codegenConfigPath);
 
-var uncrashableConfigString = Fs.readFileSync(CodegenConfig.codegenConfigPath, "utf8");
+function setUncrashableConfigString(param) {
+  try {
+    return Fs.readFileSync(CodegenConfig.codegenConfigPath, "utf8");
+  }
+  catch (raw_obj){
+    var obj = Caml_js_exceptions.internalToOCamlException(raw_obj);
+    if (obj.RE_EXN_ID === Js_exn.$$Error) {
+      var m = obj._1.message;
+      if (m !== undefined) {
+        throw {
+              RE_EXN_ID: UncrashableFileNotFound,
+              _1: "Uncrashable yaml config not found: " + m,
+              Error: new Error()
+            };
+      }
+      return "";
+    }
+    throw obj;
+  }
+}
+
+var uncrashableConfigString = setUncrashableConfigString(undefined);
 
 var manifestString = Fs.readFileSync(CodegenConfig.graphManifest, "utf8");
 
@@ -332,7 +357,9 @@ Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "EntityHelpers.ts", GraphE
 
 var dir = CodegenConfig.outputEntityFilePath;
 
+exports.UncrashableFileNotFound = UncrashableFileNotFound;
 exports.sourceDir = sourceDir;
+exports.setUncrashableConfigString = setUncrashableConfigString;
 exports.uncrashableConfigString = uncrashableConfigString;
 exports.manifestString = manifestString;
 exports.manifest = manifest;
