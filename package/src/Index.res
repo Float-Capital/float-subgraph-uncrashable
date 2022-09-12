@@ -393,6 +393,6 @@ if !Node_fs.existsSync(dir) {
 }
 
 Node_fs.writeFileAsUtf8Sync(
-  `${CodegenConfig.outputEntityFilePath}EntityHelpers.ts`,
+  `${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`,
   outputCode(~entityImports, ~networkIdPrefix=entityPrefixDefinition, ~functions),
 )
