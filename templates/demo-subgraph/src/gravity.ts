@@ -10,7 +10,7 @@ import {
   updateGravatar,
   createTransaction,
   generateTransactionId,
-} from "./generated/EntityHelpers";
+} from "./generated/UncrashableHelpers";
 
 export function handleNewGravatar(event: NewGravatar): void {
   createGravatar(generateGravatarId(event.params.id), {
