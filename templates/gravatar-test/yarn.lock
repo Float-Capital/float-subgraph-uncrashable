@@ -321,10 +321,10 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@float-capital/float-subgraph-uncrashable@^0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@float-capital/float-subgraph-uncrashable/-/float-subgraph-uncrashable-0.0.21.tgz#cb3655f3834de1519872414410b8db227a02517f"
-  integrity sha512-EskQexiwpkmN4D4qFWpxBHnJn1iQCffwrDtD73FT08cLWwOUmI2ac7jlSwkQQ7V8zuo34xgP+VuUKHrJSeZQFA==
+"@float-capital/float-subgraph-uncrashable@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@float-capital/float-subgraph-uncrashable/-/float-subgraph-uncrashable-0.0.22.tgz#fcbfb28d678d3d65719ff0ed7575dd8186cee2c2"
+  integrity sha512-U2qvNn/Fi3WmQrE/2pX0EdPgntom0IpCN7Wsh17CT5yCGalUgjT24ip3yaldoGN+ZGdLei4HnCCmNPRX+OBvVQ==
   dependencies:
     graphql "^16.6.0"
     graphql-import-node "^0.0.5"

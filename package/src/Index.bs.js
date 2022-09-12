@@ -353,7 +353,7 @@ if (!Fs.existsSync(CodegenConfig.outputEntityFilePath)) {
   Fs.mkdirSync(CodegenConfig.outputEntityFilePath);
 }
 
-Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "EntityHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
+Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "UncrashableHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
 
 var dir = CodegenConfig.outputEntityFilePath;
 
