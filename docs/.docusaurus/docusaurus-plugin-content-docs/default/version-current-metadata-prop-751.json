@@ -1,0 +1,91 @@
+{
+  "pluginId": "default",
+  "version": "current",
+  "label": "Next",
+  "banner": null,
+  "badge": false,
+  "className": "docs-version-current",
+  "isLast": true,
+  "docsSidebars": {
+    "someSidebar": [
+      {
+        "type": "category",
+        "label": "Introduction",
+        "items": [
+          {
+            "type": "link",
+            "label": "Welcome",
+            "href": "/docs/",
+            "docId": "welcome"
+          },
+          {
+            "type": "link",
+            "label": "Overview",
+            "href": "/docs/overview",
+            "docId": "overview"
+          }
+        ],
+        "collapsed": true,
+        "collapsible": true
+      },
+      {
+        "type": "category",
+        "label": "Getting Started",
+        "items": [
+          {
+            "type": "link",
+            "label": "Installation",
+            "href": "/docs/installation",
+            "docId": "installation"
+          },
+          {
+            "type": "link",
+            "label": "Configuration",
+            "href": "/docs/configuration",
+            "docId": "configuration"
+          },
+          {
+            "type": "link",
+            "label": "Support",
+            "href": "/docs/support",
+            "docId": "support"
+          }
+        ],
+        "collapsed": true,
+        "collapsible": true
+      }
+    ]
+  },
+  "docs": {
+    "configuration": {
+      "id": "configuration",
+      "title": "Configuration",
+      "description": "NOTE: These docs are under active development 👷‍♀️👷",
+      "sidebar": "someSidebar"
+    },
+    "installation": {
+      "id": "installation",
+      "title": "Installation",
+      "description": "NOTE: These docs are under active development 👷‍♀️👷",
+      "sidebar": "someSidebar"
+    },
+    "overview": {
+      "id": "overview",
+      "title": "Overview",
+      "description": "NOTE: These docs are under active development 👷‍♀️👷",
+      "sidebar": "someSidebar"
+    },
+    "support": {
+      "id": "support",
+      "title": "Support",
+      "description": "NOTE: These docs are under active development 👷‍♀️👷",
+      "sidebar": "someSidebar"
+    },
+    "welcome": {
+      "id": "welcome",
+      "title": "Welcome",
+      "description": "NOTE: These docs are under active development 👷‍♀️👷",
+      "sidebar": "someSidebar"
+    }
+  }
+}

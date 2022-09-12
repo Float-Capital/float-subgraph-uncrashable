@@ -33,14 +33,14 @@ Postfixing '#15' will associate your PR with the issue '#15' and make everyone's
 `git commit -m "This change fixes bug '#15'`
 `git push origin fix/some-bug-#15`
 
-4. Go to github.com/float-capital/float-subgraph-uncrashable in your web browser and issue a new pull request
+4. Go to subgraph uncrashable code repository on [Github](github.com/float-capital/float-subgraph-uncrashable) in your web browser and issue a new pull request into the `dev` branch. 
 
 Read the PR template very carefully and make sure to follow all the instructions. These instructions refer to some very important conditions that your PR must meet in order to be accepted, such as making sure that all tests pass, etc.
 
-5. Your code will be reviwed by maintainers. Maintainers check that all tests pass, review the coding style, and check for general code correctness. If everything is OK, we'll merge your pull request and your code will be part of Graph Uncrashable
+5. Your code will be reviewed by maintainers. Maintainers check that all tests pass, review the coding style, and check for general code correctness. If everything is okay, we will merge your pull request and your code will be part of Subgraph Uncrashable. 
 
 
 Thank you for contributing!
 
-If you have any questions, feel free to post them to github.com/float-capital/float-subgraph-uncrashable/issues.
+If you have any questions, feel free to us a message in the discussions section in the Subgraph Uncrashable code repository on [Github](github.com/float-capital/float-subgraph-uncrashable/issues.)
 

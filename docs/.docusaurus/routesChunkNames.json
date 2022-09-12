@@ -1,0 +1,86 @@
+{
+  "/__docusaurus/debug-e93": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    }
+  },
+  "/__docusaurus/debug/config-872": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    }
+  },
+  "/__docusaurus/debug/content-bdd": {
+    "__comp": "__comp---theme-debug-contentba-8-ce7",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    },
+    "allContent": "allContent---docusaurus-debug-content-246-9aa"
+  },
+  "/__docusaurus/debug/globalData-7aa": {
+    "__comp": "__comp---theme-debug-global-dataede-0fa",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    }
+  },
+  "/__docusaurus/debug/metadata-8b1": {
+    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    }
+  },
+  "/__docusaurus/debug/registry-896": {
+    "__comp": "__comp---theme-debug-registry-679-501",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    }
+  },
+  "/__docusaurus/debug/routes-415": {
+    "__comp": "__comp---theme-debug-routes-946-699",
+    "__context": {
+      "plugin": "plugin---docusaurus-debuge-0-e-b11"
+    }
+  },
+  "/markdown-page-613": {
+    "__comp": "__comp---theme-mdx-page-1-f-3-b90",
+    "__context": {
+      "plugin": "plugin---markdown-pageee-8-6aa"
+    },
+    "content": "content---markdown-page-393-028"
+  },
+  "/docs-966": {
+    "__comp": "__comp---theme-doc-page-1-be-9be",
+    "__context": {
+      "plugin": "plugin---docs-336-944"
+    },
+    "versionMetadata": "versionMetadata---docs-935-398"
+  },
+  "/docs/-510": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-ebf-335"
+  },
+  "/docs/configuration-757": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-configuration-9-ed-a26"
+  },
+  "/docs/installation-e7f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-installation-3-b-8-7c6"
+  },
+  "/docs/overview-55b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-overview-1-db-071"
+  },
+  "/docs/support-a84": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-supportd-9-e-f36"
+  },
+  "/-787": {
+    "__comp": "__comp---site-src-pages-index-jsc-4-f-f99",
+    "__context": {
+      "plugin": "plugin---markdown-pageee-8-6aa"
+    },
+    "config": "config---5-e-9-4f3"
+  }
+}

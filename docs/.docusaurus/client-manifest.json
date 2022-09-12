@@ -1,0 +1,197 @@
+{
+  "entrypoints": [
+    "main"
+  ],
+  "origins": {
+    "972": [
+      972
+    ],
+    "17896441": [
+      532,
+      918
+    ],
+    "main": [
+      303,
+      532,
+      179
+    ],
+    "runtime~main": [
+      179,
+      532,
+      303
+    ],
+    "1be78505": [
+      532,
+      972
+    ],
+    "1db64337": [
+      372
+    ],
+    "336a8a7d": [
+      128
+    ],
+    "3b8c55ea": [
+      217
+    ],
+    "935f2afb": [
+      53
+    ],
+    "9ed00105": [
+      4
+    ],
+    "c4f5d8e4": [
+      532,
+      195
+    ],
+    "d9e16301": [
+      316
+    ],
+    "ebfee794": [
+      305
+    ],
+    "ee8f6aa8": [
+      943
+    ],
+    "styles": [
+      179,
+      195,
+      303,
+      514,
+      918,
+      532
+    ]
+  },
+  "assets": {
+    "4": {
+      "js": [
+        {
+          "file": "assets/js/9ed00105.6bafb0e0.js",
+          "hash": "41677d26d4c1a181",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/9ed00105.6bafb0e0.js"
+        }
+      ]
+    },
+    "53": {
+      "js": [
+        {
+          "file": "assets/js/935f2afb.138bba3c.js",
+          "hash": "8ff2975c995b84ec",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/935f2afb.138bba3c.js"
+        }
+      ]
+    },
+    "128": {
+      "js": [
+        {
+          "file": "assets/js/336a8a7d.e31b042a.js",
+          "hash": "c6c1bab6171b4729",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/336a8a7d.e31b042a.js"
+        }
+      ]
+    },
+    "179": {
+      "js": [
+        {
+          "file": "assets/js/main.eaf28d94.js",
+          "hash": "c1bb57184a88d29c",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/main.eaf28d94.js"
+        }
+      ]
+    },
+    "195": {
+      "js": [
+        {
+          "file": "assets/js/c4f5d8e4.166a9c97.js",
+          "hash": "5d4ca322a0f37480",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/c4f5d8e4.166a9c97.js"
+        }
+      ]
+    },
+    "217": {
+      "js": [
+        {
+          "file": "assets/js/3b8c55ea.15201e84.js",
+          "hash": "792815bf0f9a7d1d",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/3b8c55ea.15201e84.js"
+        }
+      ]
+    },
+    "303": {
+      "js": [
+        {
+          "file": "assets/js/runtime~main.5dcf87f7.js",
+          "hash": "d038f92b41c4d791",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/runtime~main.5dcf87f7.js"
+        }
+      ]
+    },
+    "305": {
+      "js": [
+        {
+          "file": "assets/js/ebfee794.0f99fe75.js",
+          "hash": "48a64baa1db07bcc",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/ebfee794.0f99fe75.js"
+        }
+      ]
+    },
+    "316": {
+      "js": [
+        {
+          "file": "assets/js/d9e16301.c92cca5b.js",
+          "hash": "a8f7246e65ae4541",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/d9e16301.c92cca5b.js"
+        }
+      ]
+    },
+    "372": {
+      "js": [
+        {
+          "file": "assets/js/1db64337.466b4c3b.js",
+          "hash": "49e03f377580dbd9",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/1db64337.466b4c3b.js"
+        }
+      ]
+    },
+    "532": {
+      "css": [
+        {
+          "file": "assets/css/styles.3aba7840.css",
+          "hash": "22a6d3b938759a37",
+          "publicPath": "/float-subgraph-uncrashable/assets/css/styles.3aba7840.css"
+        }
+      ]
+    },
+    "918": {
+      "js": [
+        {
+          "file": "assets/js/17896441.7ae467f2.js",
+          "hash": "e340f8193cbf421e",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/17896441.7ae467f2.js"
+        }
+      ]
+    },
+    "943": {
+      "js": [
+        {
+          "file": "assets/js/ee8f6aa8.853a5192.js",
+          "hash": "a4c768a6465de411",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/ee8f6aa8.853a5192.js"
+        }
+      ]
+    },
+    "972": {
+      "js": [
+        {
+          "file": "assets/js/972.0bf75486.js",
+          "hash": "3df8786d9b0bfbbe",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/972.0bf75486.js"
+        },
+        {
+          "file": "assets/js/1be78505.dc3de326.js",
+          "hash": "a214a12ce825b303",
+          "publicPath": "/float-subgraph-uncrashable/assets/js/1be78505.dc3de326.js"
+        }
+      ]
+    }
+  }
+}
