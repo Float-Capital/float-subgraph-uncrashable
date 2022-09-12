@@ -32,3 +32,21 @@ entitySettings:
     entityId:
       - name: transactionId
         type: Bytes
+  TokenLockWallet:
+    useDefault: {}
+    entityId:
+      - name: id
+        type: Address
+    setters:
+      - name: setTokensReleased
+        fields:
+          - tokensReleased
+      - name: setTokensWithdrawn
+        fields:
+          - tokensWithdrawn
+      - name: setTokensRevoked
+        fields:
+          - tokensRevoked
+      - name: setTokenDestinationsApproved
+        fields:
+          - tokenDestinationsApproved
