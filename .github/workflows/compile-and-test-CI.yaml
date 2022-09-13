@@ -9,18 +9,33 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: cd package && yarn
-      - run: cd package && yarn res:build
-      - name: Cache graph node_modules
+      - name: Install uncrashable package dependencies
+        run: cd package && yarn
+      - name: Build dependencies
+        run: cd package && yarn res:build
+      - name: Cache dependencies
         id: cache_graph
         uses: actions/cache@v2
         with:
           path: ./templates/gravatar-test/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('./templates/gravatar-test/yarn.lock') }}
-      - name: install graph packages
+      - name: install gravatar graph dependencies
         if: steps.cache_graph.outputs.cache-hit != 'true'
         id: install_node_packages_graph
         run: cd templates/gravatar-test && yarn
-      - run: cd templates/gravatar-test && yarn codegen
-      - run: cd templates/gravatar-test && yarn uncrashable-dev
-      - run: cd templates/gravatar-test && yarn test
+      - name: Run graph-cli codegen
+        run: cd templates/gravatar-test && yarn codegen
+      - name: Run uncrashable graph development package
+        run: cd templates/gravatar-test && yarn uncrashable-dev
+      - name: Run gravatar tests
+        run: cd templates/gravatar-test && yarn test
+      - name: install token lock graph dependencies
+        if: steps.cache_graph.outputs.cache-hit != 'true'
+        id: install_node_packages_graph
+        run: cd templates/demo-subgraph && yarn
+      - name: Run graph-cli codegen
+        run: cd templates/demo-subgraph && yarn codegen
+      - name: Run uncrashable graph development package
+        run: cd templates/demo-subgraph && yarn uncrashable-dev
+      - name: Run timelock tests
+        run: cd templates/demo-subgraph && yarn test
