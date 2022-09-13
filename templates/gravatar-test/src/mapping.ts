@@ -28,7 +28,7 @@ export function handleNewGravatar(event: NewGravatar): void {
 
   createTestEntity(generateTestEntityId("name", BigDecimal.zero()), {
     text: "test",
-    bigDecimalNum: BigDecimal.zero(),
+    bigDecimalNum: BigDecimal.fromString("3.0"),
     bigDecimalArray: testBDArray,
     gravatar: grav.id,
   });

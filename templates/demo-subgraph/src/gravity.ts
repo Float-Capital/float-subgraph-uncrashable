@@ -33,10 +33,4 @@ export function handleCreateGravatar(call: CreateGravatarCall): void {
     displayName: call.inputs._displayName,
     imageUrl: call.inputs._imageUrl,
   });
-
-  // let id = call.transaction.hash.toHex();
-  // let transaction = new Transaction(id);
-  // transaction.displayName = call.inputs._displayName;
-  // transaction.imageUrl = call.inputs._imageUrl;
-  // transaction.save();
 }

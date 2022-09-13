@@ -396,3 +396,5 @@ Node_fs.writeFileAsUtf8Sync(
   `${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`,
   outputCode(~entityImports, ~networkIdPrefix=entityPrefixDefinition, ~functions),
 )
+
+Js.log(`Output saved to ${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`)
