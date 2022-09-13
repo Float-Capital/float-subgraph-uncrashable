@@ -8,5 +8,3 @@ graphql_ppx_cache/
 .env
 
 .DS_Store
-
-.docusaurus/
