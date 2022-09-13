@@ -28,8 +28,10 @@ import {
 } from "../../generated/schema";
 import { mockGraphAccount, mockNameSignalTransaction } from "./utils";
 import {
+  createTokenLockWallet,
   generateGraphAccountId,
   generateNameSignalTransactionId,
+  generateTokenLockWalletId,
   getGraphAccount,
   getTokenLockWallet,
   setOperators,
@@ -41,30 +43,9 @@ describe("dataSourceMock", () => {
     let addressString = "0xA16081F360e3847006dB660bae1c6d1b2e17eC2A";
     let address = Address.fromString(addressString);
 
-    let wallet = new TokenLockWallet(address.toHexString());
-    // The following values should be set, because they are required fields,
-    // Since graph-cli 0.26.1, 0.27.1, 0.28.2 and 0.29.1, graph codegen will not generate
-    // default values for the required fields on .save()
-    wallet.manager = Address.zero();
-    wallet.initHash = Address.zero() as Bytes;
-    wallet.beneficiary = Address.zero();
-    wallet.tokenDestinationsApproved = false;
-    wallet.token = Bytes.fromHexString(
-      "0xc944e90c64b2c07662a292be6244bdf05cda44a7"
-    ); // GRT
-    wallet.managedAmount = BigInt.fromI32(0);
-    wallet.startTime = BigInt.fromI32(0);
-    wallet.endTime = BigInt.fromI32(0);
-    wallet.periods = BigInt.fromI32(0);
-    wallet.releaseStartTime = BigInt.fromI32(0);
-    wallet.vestingCliffTime = BigInt.fromI32(0);
-    wallet.tokensReleased = BigInt.fromI32(0);
-    wallet.tokensWithdrawn = BigInt.fromI32(0);
-    wallet.tokensRevoked = BigInt.fromI32(0);
-    wallet.blockNumberCreated = BigInt.fromI32(0);
-    wallet.txHash = Address.zero() as Bytes;
-
-    wallet.save();
+    createTokenLockWallet(generateTokenLockWalletId(address), {
+      token: Bytes.fromHexString("0xc944e90c64b2c07662a292be6244bdf05cda44a7"),
+    });
 
     let context = new DataSourceContext();
     context.set("contextVal", Value.fromI32(325));

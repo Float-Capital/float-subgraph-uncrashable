@@ -33,7 +33,23 @@ entitySettings:
       - name: transactionId
         type: Bytes
   TokenLockWallet:
-    useDefault: {}
+    useDefault:
+      manager: {}
+      initHash: {}
+      beneficiary: {}
+      tokenDestinationsApproved: {}
+      managedAmount: {}
+      startTime: {}
+      endTime: {}
+      periods: {}
+      releaseStartTime: {}
+      vestingCliffTime: {}
+      tokensReleased: {}
+      tokensWithdrawn: {}
+      tokensRevoked: {}
+      blockNumberCreated: {}
+      revocable: {}
+      txHash: {}
     entityId:
       - name: id
         type: Address
