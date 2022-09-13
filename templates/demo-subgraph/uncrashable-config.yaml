@@ -50,3 +50,43 @@ entitySettings:
       - name: setTokenDestinationsApproved
         fields:
           - tokenDestinationsApproved
+      - name: updateManager
+        fields:
+          - manager
+  GraphAccount:
+    useDefault:
+      names: {}
+      defaultName: {}
+      defaultDisplayName: {}
+      isOrganization: {}
+      metadataHash: {}
+      codeRepository: {}
+      description: {}
+      image: {}
+      website: {}
+      displayName: {}
+      operatorOf: {}
+      subgraphs: {}
+      developerCreatedAt: {}
+      createdDisputes: {}
+      disputesAgainst: {}
+      curator: {}
+      indexer: {}
+      delegator: {}
+      nameSignalTransactions: {}
+    entityId:
+      - name: id
+        type: String
+    setters:
+      - name: setOperators
+        fields:
+          - operators
+  NameSignalTransaction:
+    useDefault: {}
+    entityId:
+      - name: id
+        type: String
+    setters:
+      - name: setSigner
+        fields:
+          - signer

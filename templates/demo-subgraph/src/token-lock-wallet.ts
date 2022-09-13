@@ -1,4 +1,4 @@
-import { BigInt, dataSource } from "@graphprotocol/graph-ts";
+import { BigInt, dataSource, log } from "@graphprotocol/graph-ts";
 import {
   TokensReleased,
   TokensWithdrawn,
@@ -17,6 +17,7 @@ import {
   setTokensWithdrawn,
   setTokensRevoked,
   setTokenDestinationsApproved,
+  updateManager,
 } from "./generated/UncrashableHelpers";
 
 // export function handleTokensReleased(event: TokensReleased): void {
@@ -64,38 +65,37 @@ export function handleTokensRevoked(event: TokensRevoked): void {
 }
 
 export function handleManagerUpdated(event: ManagerUpdated): void {
-  let id = event.address.toHexString();
-  let tokenLockWallet = TokenLockWallet.load(id)!;
-  tokenLockWallet.manager = event.params._newManager;
-  tokenLockWallet.save();
+  let tokenLockWallet = getTokenLockWallet(
+    generateTokenLockWalletId(event.address)
+  );
+  updateManager(event.address.toHexString(), {
+    manager: event.params._newManager,
+  });
 }
 
 export function handleApproveTokenDestinations(
   event: ApproveTokenDestinations
 ): void {
-  let tokenLockWallet = getTokenLockWallet(
-    generateTokenLockWalletId(dataSource.address())
-  );
+  let tokenLockWalletId = generateTokenLockWalletId(dataSource.address());
+
   if (dataSource.network() == "rinkeby") {
-    setTokenDestinationsApproved(
-      generateTokenLockWalletId(dataSource.address()),
-      { tokenDestinationsApproved: true }
-    );
+    setTokenDestinationsApproved(tokenLockWalletId, {
+      tokenDestinationsApproved: true,
+    });
   }
   let context = dataSource.context();
   if (context.get("contextVal")!.toI32() > 0) {
-    tokenLockWallet.setBigInt(
-      "tokensReleased",
-      BigInt.fromI32(context.get("contextVal")!.toI32())
-    );
+    setTokensReleased(tokenLockWalletId, {
+      tokensReleased: BigInt.fromI32(context.get("contextVal")!.toI32()),
+    });
   }
-  tokenLockWallet.save();
 }
 
 export function handleRevokeTokenDestinations(
   event: RevokeTokenDestinations
 ): void {
-  let tokenLockWallet = TokenLockWallet.load(event.address.toHexString())!;
-  tokenLockWallet.tokenDestinationsApproved = false;
-  tokenLockWallet.save();
+  let tokenLockWalletId = generateTokenLockWalletId(dataSource.address());
+  setTokenDestinationsApproved(tokenLockWalletId, {
+    tokenDestinationsApproved: false,
+  });
 }

@@ -355,6 +355,8 @@ if (!Fs.existsSync(CodegenConfig.outputEntityFilePath)) {
 
 Fs.writeFileSync(CodegenConfig.outputEntityFilePath + "UncrashableHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
 
+console.log("Output saved to " + CodegenConfig.outputEntityFilePath + "UncrashableHelpers.ts");
+
 var dir = CodegenConfig.outputEntityFilePath;
 
 exports.UncrashableFileNotFound = UncrashableFileNotFound;

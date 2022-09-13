@@ -14,10 +14,10 @@ let configEntityMap: Js.Dict.t<configEntityItem> = Js.Dict.empty()
 let confirmTypeIsSupported = argType => {
   switch argType {
   | "String"
-  | "Int"
   | "BigInt"
   | "Bytes"
   | "Boolean"
+  | "Address"
   | "constant"
   | "BigDecimal" => true
   | uncaught => false
@@ -54,7 +54,8 @@ let rec validateFieldType = (~config, ~fieldName, field) => {
     let (fieldType, _) = field["type"]->validateFieldType(~config, ~fieldName)
     (fieldType, true)
 
-  | #NonNullType => if config->Js.Dict.get(fieldName)->Option.isSome {
+  | #NonNullType =>
+    if config->Js.Dict.get(fieldName)->Option.isSome {
       field["type"]->validateFieldType(~config, ~fieldName)
     } else {
       let _ = errors->Js.Array2.push(`Missing field: ${fieldName} in uncrashable-config.yaml`)

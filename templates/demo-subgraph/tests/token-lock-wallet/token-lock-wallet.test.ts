@@ -27,6 +27,14 @@ import {
   Subgraph,
 } from "../../generated/schema";
 import { mockGraphAccount, mockNameSignalTransaction } from "./utils";
+import {
+  generateGraphAccountId,
+  generateNameSignalTransactionId,
+  getGraphAccount,
+  getTokenLockWallet,
+  setOperators,
+  setSigner,
+} from "../../src/generated/UncrashableHelpers";
 
 describe("dataSourceMock", () => {
   beforeAll(() => {
@@ -73,13 +81,13 @@ describe("dataSourceMock", () => {
     let address = Address.fromString(addressString);
 
     let event = changetype<ApproveTokenDestinations>(newMockEvent());
-    let wallet = TokenLockWallet.load(address.toHexString())!;
+    let wallet = TokenLockWallet.load(address.toHex())!;
 
     assert.assertTrue(!wallet.tokenDestinationsApproved);
 
     handleApproveTokenDestinations(event);
 
-    wallet = TokenLockWallet.load(address.toHexString())!;
+    wallet = getTokenLockWallet(address.toHex())!;
 
     assert.assertTrue(wallet.tokenDestinationsApproved);
     assert.bigIntEquals(wallet.tokensReleased, BigInt.fromI32(325));
@@ -99,17 +107,14 @@ describe("@derivedFrom fields", () => {
   test("Derived fields example test", () => {
     let mainAccount = GraphAccount.load("12")!;
 
-    assert.assertNull(mainAccount.get("nameSignalTransactions"));
-    assert.assertNull(mainAccount.get("operatorOf"));
-
-    let operatedAccount = GraphAccount.load("1")!;
-    operatedAccount.operators = [mainAccount.id];
-    operatedAccount.save();
+    setOperators(generateGraphAccountId("1"), {
+      operators: [mainAccount.id],
+    });
 
     mockNameSignalTransaction("1234", mainAccount.id);
     mockNameSignalTransaction("2", mainAccount.id);
 
-    mainAccount = GraphAccount.load("12")!;
+    mainAccount = getGraphAccount(generateGraphAccountId("12"));
 
     assert.assertNotNull(mainAccount.get("nameSignalTransactions"));
     assert.assertNotNull(mainAccount.get("operatorOf"));
@@ -118,9 +123,9 @@ describe("@derivedFrom fields", () => {
 
     mockNameSignalTransaction("2345", mainAccount.id);
 
-    let nst = NameSignalTransaction.load("1234")!;
-    nst.signer = "11";
-    nst.save();
+    setSigner(generateNameSignalTransactionId("1234"), {
+      signer: "11",
+    });
 
     store.remove("NameSignalTransaction", "2");
 

@@ -20,11 +20,11 @@ var configEntityMap = {};
 
 function confirmTypeIsSupported(argType) {
   switch (argType) {
+    case "Address" :
     case "BigDecimal" :
     case "BigInt" :
     case "Boolean" :
     case "Bytes" :
-    case "Int" :
     case "String" :
     case "constant" :
         return true;
