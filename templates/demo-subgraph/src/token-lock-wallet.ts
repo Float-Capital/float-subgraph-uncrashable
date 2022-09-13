@@ -20,23 +20,6 @@ import {
   updateManager,
 } from "./generated/UncrashableHelpers";
 
-// export function handleTokensReleased(event: TokensReleased): void {
-//   let tokenLockWallet = TokenLockWallet.load(event.address.toHexString())!
-//   tokenLockWallet.tokensReleased = tokenLockWallet.tokensReleased.plus(event.params.amount)
-//   tokenLockWallet.save()
-// }
-
-// export function handleTokensWithdrawn(event: TokensWithdrawn): void {
-//   let tokenLockWallet = TokenLockWallet.load(event.address.toHexString())!
-//   tokenLockWallet.tokensWithdrawn = tokenLockWallet.tokensWithdrawn.plus(event.params.amount)
-//   tokenLockWallet.save()
-// }
-
-// export function handleTokensRevoked(event: TokensRevoked): void {
-//   let tokenLockWallet = TokenLockWallet.load(event.address.toHexString())!
-//   tokenLockWallet.tokensRevoked = tokenLockWallet.tokensRevoked.plus(event.params.amount)
-//   tokenLockWallet.save()
-// }
 export function handleTokensReleased(event: TokensReleased): void {
   let tokenLockWallet = getTokenLockWallet(
     generateTokenLockWalletId(event.address)
