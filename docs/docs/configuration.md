@@ -9,11 +9,11 @@ slug: /configuration
 
 ## Getting Started
 
-This tool is as addition to an existing subgraph to ensure data safety and atomic loading. If you are just starting with developing your subgraph start [here](https://thegraph.com/docs/en/developing/creating-a-subgraph/).
+Subgraph Uncrashable by Float is a complementary tool to an existing subgraph that ensures data safety and atomic loading. If you are just starting with developing your subgraph start [here](https://thegraph.com/docs/en/developing/creating-a-subgraph/).
 
 ## Uncrashable Config
 
-Once your subgraph is in place. The Float Subgraph Uncrashable can be used to create helper functions for your entities to ensure your subgraph doesn't crash.
+Once your subgraph is in place, Subgraph Uncrashable can be used to create helper functions for your entities to ensure your subgraph doesn't crash.
 
 Below is an example `uncrashable-config.yaml` file for the [gravatar example subgraph](https://github.com/graphprotocol/example-subgraph).
 
@@ -85,8 +85,9 @@ Supported types for entityId values are:
 String;
 BigInt;
 Bytes;
-constant;
+Address;
 BigDecimal;
+constant;
 ```
 
 `constant` is a unique type to the Float Subgraph Uncrashable and allows for specifying a constant string in the ID. Example:
