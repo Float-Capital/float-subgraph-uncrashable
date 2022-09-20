@@ -94,15 +94,6 @@ function ensureEntityIdHasCorrectPrefix(entityId: string): string {
   }
 }
 
-export function entityArrayToIdArray(
-  entityArray: Array<Entity>
-): Array<string> {
-  // NOTE: this function is broken. The assembly script type system doesn't allow this.
-  //       use the default empty array ALWAYS untill we work this out.
-  // TODO: fix this function.
-  return entityArray.map((entity) => entity.getString("id"));
-}
-
 export class GetOrCreateReturn<EntityType> {
   entity: EntityType;
   wasCreated: boolean;
