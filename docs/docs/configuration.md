@@ -9,7 +9,7 @@ slug: /configuration
 
 ## Getting Started
 
-Subgraph Uncrashable by Float is a complementary tool to an existing subgraph that ensures data safety and atomic loading. If you are just starting with developing your subgraph start [here](https://thegraph.com/docs/en/developing/creating-a-subgraph/).
+Subgraph Uncrashable by Float is a complementary tool to an existing subgraph that ensures data safety and atomic loading. To begin developing your subgraph start [here](https://thegraph.com/docs/en/developing/creating-a-subgraph/).
 
 ## Uncrashable Config
 
