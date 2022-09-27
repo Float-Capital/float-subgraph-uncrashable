@@ -18,7 +18,7 @@ const FeatureList = [
   {
     title: 'Completely Safe',
     // Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    Png: require('@site/static/img/sun.png').default,
+    Png: require('@site/static/img/astronaut.png').default,
     description: (
       <>
         Common problems seen in subgraph development are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities. Ensure all interactions with entities are completely atomic. 
