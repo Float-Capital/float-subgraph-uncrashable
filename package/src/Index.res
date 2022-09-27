@@ -3,6 +3,8 @@
 open GraphEntityGenTemplates
 open UncrashableValidation
 
+exception UncrashableFileNotFound(string)
+
 @module("path") external dirname: string => string = "dirname"
 @module("path") external resolve: (string, string) => string = "resolve"
 
@@ -12,7 +14,22 @@ let sourceDir = dirname(CodegenConfig.graphManifest)
 Js.log(sourceDir)
 
 Js.log(CodegenConfig.codegenConfigPath)
-let uncrashableConfigString = Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
+
+let setUncrashableConfigString = () => {
+  try {
+    Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
+  } catch {
+  | Js.Exn.Error(obj) => {
+      switch Js.Exn.message(obj) {
+      | Some(m) => raise(UncrashableFileNotFound("Uncrashable yaml config not found: " ++ m))
+      | None => ()
+      }
+      ""
+    }
+  }
+}
+
+let uncrashableConfigString = setUncrashableConfigString()
 
 let manifestString = Node_fs.readFileAsUtf8Sync(CodegenConfig.graphManifest)
 
@@ -376,6 +393,8 @@ if !Node_fs.existsSync(dir) {
 }
 
 Node_fs.writeFileAsUtf8Sync(
-  `${CodegenConfig.outputEntityFilePath}EntityHelpers.ts`,
+  `${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`,
   outputCode(~entityImports, ~networkIdPrefix=entityPrefixDefinition, ~functions),
 )
+
+Js.log(`Output saved to ${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`)

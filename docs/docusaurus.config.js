@@ -39,7 +39,8 @@ module.exports = {
       title: "",
       logo: {
         alt: "Float Logo",
-        src: "https://media-float-capital.fra1.cdn.digitaloceanspaces.com/public/img/float-logo-sq-center.svg"
+        // src: "https://media-float-capital.fra1.cdn.digitaloceanspaces.com/public/img/float-logo-sq-center.svg"
+        src: "/img/byfloat.png",
       },
       items: [
          {

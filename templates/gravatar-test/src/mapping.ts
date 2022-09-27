@@ -9,7 +9,7 @@ import {
   generateTestEntityId,
   generateTestEntity2Id,
   createTestEntity2,
-} from "./generated/EntityHelpers";
+} from "./generated/UncrashableHelpers";
 
 export function handleNewGravatar(event: NewGravatar): void {
   let testBDArray: Array<BigDecimal> = [BigDecimal.fromString("1.2")];
@@ -28,7 +28,7 @@ export function handleNewGravatar(event: NewGravatar): void {
 
   createTestEntity(generateTestEntityId("name", BigDecimal.zero()), {
     text: "test",
-    bigDecimalNum: BigDecimal.zero(),
+    bigDecimalNum: BigDecimal.fromString("3.0"),
     bigDecimalArray: testBDArray,
     gravatar: grav.id,
   });

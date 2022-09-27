@@ -16,6 +16,7 @@ import { BigDecimal } from "@graphprotocol/graph-ts";
 
 let GRAVATAR_ENTITY_TYPE = "Gravatar";
 let TEST_ENTITY_TYPE = "TestEntity";
+let TEST_ENTITY_TYPE_2 = "TestEntity2";
 
 test(
   "Should throw an error",
@@ -63,9 +64,11 @@ describe("Mocked Events", () => {
     );
     assert.fieldEquals(GRAVATAR_ENTITY_TYPE, "13", "testEntities", "[name-0]");
     assert.fieldEquals(TEST_ENTITY_TYPE, "name-0", "text", "test");
+    assert.fieldEquals(TEST_ENTITY_TYPE, "name-0", "bigDecimalNum", "3");
+
     assert.fieldEquals(
-      TEST_ENTITY_TYPE,
-      "name-0",
+      TEST_ENTITY_TYPE_2,
+      "t2-2",
       "bigDecimalNum",
       BigDecimal.zero().toString()
     );

@@ -86,21 +86,12 @@ ${networkIdPrefix}
 }
 export let ENTITY_ID_PREFIX = getIdPrefix(NETWORK_NAME);
 
-function makeSureEntityIdHasCorrectPrefix(entityId: string): string {
+function ensureEntityIdHasCorrectPrefix(entityId: string): string {
   if (entityId.startsWith(ENTITY_ID_PREFIX)) {
     return entityId;
   } else {
     return ENTITY_ID_PREFIX + entityId;
   }
-}
-
-export function entityArrayToIdArray(
-  entityArray: Array<Entity>
-): Array<string> {
-  // NOTE: this function is broken. The assembly script type system doesn't allow this.
-  //       use the default empty array ALWAYS untill we work this out.
-  // TODO: fix this function.
-  return entityArray.map((entity) => entity.getString("id"));
 }
 
 export class GetOrCreateReturn<EntityType> {
@@ -118,7 +109,7 @@ ${functions}
 let getOrInitializeDefaultFunction = (~name, ~fieldDefaultSettersStrict) =>
   `
 function getOrInitialize${name}Default(entityId: string = "UNINITIALISED - ${name}"): ${name} {
-  entityId = makeSureEntityIdHasCorrectPrefix(entityId);
+  entityId = ensureEntityIdHasCorrectPrefix(entityId);
   let loaded${name} = ${name}.load(entityId);
 
   if (loaded${name} == null) {
@@ -141,9 +132,9 @@ ${fieldInitialValues}}
 let createEntityFunction = (~name, ~fieldInitialValueSettersStrict) =>
   `
 export function create${name}(entityId: string, initialValues: ${name}InitialValues): ${name} {
-  entityId = makeSureEntityIdHasCorrectPrefix(entityId);
+  entityId = ensureEntityIdHasCorrectPrefix(entityId);
   if (${CodegenConfig.safeMode} && ${name}.load(entityId) != null) {
-      log.warning("THIS CODE IS BUGGY! Trying to create an entity that already exists. (entityType : ${name}, entitiyID: {})", [entityId]);
+      log.warning("GRAPH UNCRASHABLE WARNING: Trying to create an entity that already exists. (entityType : ${name}, entitiyID: {})", [entityId]);
 
     return ${name}.load(entityId) as ${name};
   }
@@ -158,7 +149,7 @@ ${fieldInitialValueSettersStrict}
 let doesEntityExistFunction = (~name) =>
   `
 export function does${name}Exist(entityId: string): boolean {
-  entityId = makeSureEntityIdHasCorrectPrefix(entityId);
+  entityId = ensureEntityIdHasCorrectPrefix(entityId);
   return ${name}.load(entityId) != null;
 }
 `
@@ -166,7 +157,7 @@ export function does${name}Exist(entityId: string): boolean {
 let getOrInitializeFunction = (~name) =>
   `
 export function getOrInitialize${name}(entityId: string, initialValues: ${name}InitialValues): GetOrCreateReturn<${name}> {
-  entityId = makeSureEntityIdHasCorrectPrefix(entityId);
+  entityId = ensureEntityIdHasCorrectPrefix(entityId);
   let loaded${name} = ${name}.load(entityId);
 
   let returnObject: GetOrCreateReturn<${name}>;
@@ -184,11 +175,11 @@ export function getOrInitialize${name}(entityId: string, initialValues: ${name}I
 let getFunction = (~name) =>
   `
 export function get${name}(entityId: string): ${name} {
-  entityId = makeSureEntityIdHasCorrectPrefix(entityId);
+  entityId = ensureEntityIdHasCorrectPrefix(entityId);
   let loaded${name} = ${name}.load(entityId);
 
   if (loaded${name} == null) {
-      log.warning("THIS CODE IS BUGGY! Unable to find entity of type ${name} with id {}. If this entity hasn't been initialized use the 'getOrInitialize${name}' and handle the case that it needs to be initialized.", [entityId])
+      log.warning("GRAPH UNCRASHABLE WARNING: Unable to find entity of type ${name} with id {}. If this entity hasn't been initialized use the 'getOrInitialize${name}' and handle the case that it needs to be initialized.", [entityId])
 
     return getOrInitialize${name}Default(entityId);
   }
