@@ -38,9 +38,3 @@ Once your subgraph is in place, Subgraph Uncrashable can be used to create helpe
 ## Contributions
 
 This is an open source project and any contributions are welcome! Please see the [Contribution Guidelines](github.com/Float-Capital/float-subgraph-uncrashable/blob/main/CONTRIBUTING.md) to start contributing.
-
-## Dev notes
-
-The templates folders are submodules, run this command to clone
-
-`git submodule update --init`
