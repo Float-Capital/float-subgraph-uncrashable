@@ -40,7 +40,11 @@ module.exports = {
       logo: {
         alt: "Float Logo",
         // src: "https://media-float-capital.fra1.cdn.digitaloceanspaces.com/public/img/float-logo-sq-center.svg"
-        src: "/img/byfloat.png",
+        src: "/img/shippedbyfloat.png",
+        style: {
+        width: 100, 
+        height: 50
+        }
       },
       items: [
          {
