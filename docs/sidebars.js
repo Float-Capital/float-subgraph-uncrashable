@@ -7,6 +7,7 @@ module.exports = {
     "Getting Started": [
       "installation",
       "configuration",
+      "tutorial",
       "support"
     ]
   },
