@@ -9,7 +9,7 @@ slug: /
 
 ---
 
-The team behind Float has been building subgraphs for last 5 years. Their first subgraph was for [wildcards.world](https://wildcards.world/) near the end of 2018, and since then, they have been contracted to build out multiple production critical graphs for clients (as [avolabs.io](http://avolabs.io/)) and most recently for their own protocol, [Float](https://float.capital). 
+The team behind Float has been building subgraphs for several years. First for [wildcards.world](https://wildcards.world/), and since then, they have been contracted to build out multiple production critical graphs for clients (as [avolabs.io](http://avolabs.io/)) and most recently for their own protocol, [Float](https://float.capital). 
 
 Through working extensively with subgraphs, common problems seen repeatedly in subgraph development are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities, respectively. Mishandled entities cause subgraphs to crash, which can be very disruptive for projects that are dependent on the graph. The unavailability of subgraphs can result in unavailability of the overall system and adverse business impacts.
 
