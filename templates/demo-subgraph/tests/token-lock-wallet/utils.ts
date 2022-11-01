@@ -5,7 +5,7 @@ import {
   createNameSignalTransaction,
   generateGraphAccountId,
   generateNameSignalTransactionId,
-} from "../../src/generated/UncrashableHelpers";
+} from "../../generated/UncrashableEntityHelpers";
 
 export function mockGraphAccount(id: string): void {
   createGraphAccount(generateGraphAccountId(id), {
