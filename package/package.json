@@ -9,6 +9,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "bin": {
+    "uncrashable": "bin/uncrashable"
+  },
   "dependencies": {
     "graphql": "^16.6.0",
     "graphql-import-node": "^0.0.5",

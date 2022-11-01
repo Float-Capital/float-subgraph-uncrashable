@@ -9,7 +9,7 @@
     "create-local": "graph create demo --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy demo --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
     "test": "graph test",
-    "uncrashable-dev": "node ../../package/src/Index.bs.js",   
+    "uncrashable-dev": "node ../../package/bin/uncrashable",   
     "coverage": "graph test -- -c"
   },
   "dependencies": {
