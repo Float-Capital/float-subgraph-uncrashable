@@ -319,7 +319,7 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
   if (!Fs.existsSync(outputFilePath)) {
     Fs.mkdirSync(outputFilePath);
   }
-  Fs.writeFileSync(outputFilePath + "UncrashableHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
+  Fs.writeFileSync(outputFilePath + "/UncrashableHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
   console.log("Output saved to " + outputFilePath + "UncrashableHelpers.ts");
   
 }
