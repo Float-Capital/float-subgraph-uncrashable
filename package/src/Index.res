@@ -146,10 +146,6 @@ let getFieldDefaultTypeWithNull = (
   }
 
 let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
-  let sourceDir = dirname(CodegenConfig.graphManifest)
-  Js.log(sourceDir)
-
-  Js.log(CodegenConfig.codegenConfigPath)
   let uncrashableConfigString = setUncrashableConfigString(~codegenConfigPath)
 
   let uncrashableConfig = Utils.loadYaml(uncrashableConfigString)

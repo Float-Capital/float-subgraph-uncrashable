@@ -2,13 +2,11 @@
 'use strict';
 
 var Fs = require("fs");
-var Path = require("path");
 var Js_exn = require("rescript/lib/js/js_exn.js");
 var Js_dict = require("rescript/lib/js/js_dict.js");
 var JsYaml = require("js-yaml");
 var Belt_Array = require("rescript/lib/js/belt_Array.js");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
-var CodegenConfig = require("./CodegenConfig.bs.js");
 var Caml_exceptions = require("rescript/lib/js/caml_exceptions.js");
 var Caml_js_exceptions = require("rescript/lib/js/caml_js_exceptions.js");
 var UncrashableValidation = require("./validation/UncrashableValidation.bs.js");
@@ -178,9 +176,6 @@ function getFieldDefaultTypeWithNull(strictModeOpt, recersivelyCreateUncreatedEn
 }
 
 function run(entityDefinitions, codegenConfigPath, outputFilePath) {
-  var sourceDir = Path.dirname(CodegenConfig.graphManifest);
-  console.log(sourceDir);
-  console.log(CodegenConfig.codegenConfigPath);
   var uncrashableConfigString = setUncrashableConfigString(codegenConfigPath);
   var uncrashableConfig = JsYaml.load(uncrashableConfigString);
   var uncrashableConfigErrors = UncrashableValidation.validate(entityDefinitions, uncrashableConfig);
