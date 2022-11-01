@@ -36,7 +36,7 @@ import {
   getTokenLockWallet,
   setOperators,
   setSigner,
-} from "../../src/generated/UncrashableHelpers";
+} from "../../generated/UncrashableEntityHelpers";
 
 describe("dataSourceMock", () => {
   beforeAll(() => {

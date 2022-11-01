@@ -18,7 +18,7 @@ import {
   setTokensRevoked,
   setTokenDestinationsApproved,
   updateManager,
-} from "./generated/UncrashableHelpers";
+} from "../generated/UncrashableEntityHelpers";
 
 export function handleTokensReleased(event: TokensReleased): void {
   let tokenLockWallet = getTokenLockWallet(

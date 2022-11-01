@@ -11,7 +11,7 @@ var codegenConfigPath = Belt_Option.getWithDefault(env.CODEGEN_CONFIG_PATH, "./u
 
 var generatedFolderName = Belt_Option.getWithDefault(env.GENERATED_FOLDER_NAME, "generated");
 
-var outputEntityFilePath = "./src/" + generatedFolderName;
+var outputEntityFilePath = "./" + generatedFolderName;
 
 var safeMode = Belt_Option.getWithDefault(env.SAFE_MODE, "false");
 
