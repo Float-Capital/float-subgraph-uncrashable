@@ -7,17 +7,14 @@ exception UncrashableFileNotFound(string)
 
 @module("path") external dirname: string => string = "dirname"
 @module("path") external resolve: (string, string) => string = "resolve"
+@module("fs")
+external mkdirSync: (~dir: string) => unit = "mkdirSync"
 
 @val external requireGqlFile: string => 'a = "require"
 
-let sourceDir = dirname(CodegenConfig.graphManifest)
-Js.log(sourceDir)
-
-Js.log(CodegenConfig.codegenConfigPath)
-
-let setUncrashableConfigString = () => {
+let setUncrashableConfigString = (~codegenConfigPath) => {
   try {
-    Node_fs.readFileAsUtf8Sync(CodegenConfig.codegenConfigPath)
+    Node_fs.readFileAsUtf8Sync(codegenConfigPath)
   } catch {
   | Js.Exn.Error(obj) => {
       switch Js.Exn.message(obj) {
@@ -29,54 +26,9 @@ let setUncrashableConfigString = () => {
   }
 }
 
-let uncrashableConfigString = setUncrashableConfigString()
-
-let manifestString = Node_fs.readFileAsUtf8Sync(CodegenConfig.graphManifest)
-
-let manifest = Utils.loadYaml(manifestString)
-
-let schemaPath = manifest["schema"]["file"]
-Js.log(schemaPath)
-
-let absolutePathSchema = resolve(sourceDir, schemaPath)
-
-let loadedGraphSchema = requireGqlFile(absolutePathSchema)
-
-let uncrashableConfig = Utils.loadYaml(uncrashableConfigString)
-
-let entityDefinitions = loadedGraphSchema["definitions"]
-
-let uncrashableConfigErrors = validate(~entityDefinitions, ~uncrashableConfig)
-
-if uncrashableConfigErrors->Js.Array2.length > 0 {
-  let msg = uncrashableConfigErrors->Js.Array2.reduce((acc, item) =>
-    `${acc}
-    ${item}`
-  , "")
-
-  Js.Exn.raiseTypeError(msg)
-}
-
 type enumItem
-let enumsMap: Js.Dict.t<enumItem> = Js.Dict.empty()
 type interfaceItem
-let interfacesMap: Js.Dict.t<interfaceItem> = Js.Dict.empty()
 type entityItem
-let entitiesMap: Js.Dict.t<entityItem> = Js.Dict.empty()
-
-entityDefinitions->Array.forEach(entity => {
-  let name = entity["name"]["value"]
-
-  let entityKind = entity["kind"]
-
-  if name != "_Schema_" {
-    let _ = switch entityKind {
-    | #EnumTypeDefinition => enumsMap->Js.Dict.set(name, entity->Obj.magic)
-    | #InterfaceTypeDefinition => interfacesMap->Js.Dict.set(name, entity->Obj.magic)
-    | #ObjectTypeDefinition => entitiesMap->Js.Dict.set(name, entity->Obj.magic)
-    }
-  }
-})
 
 let getNamedType = (~entityAsIdString, name) => {
   switch name["value"] {
@@ -165,27 +117,6 @@ let getDefaultValueForType = (~strictMode, ~recersivelyCreateUncreatedEntities, 
 }
 
 type entityIdPrefix = {networks: array<string>, prefix: string}
-let entityPrefixConfig: array<entityIdPrefix> =
-  uncrashableConfig["networkConfig"]["entityIdPrefixes"]->Option.getWithDefault([])
-
-let entityPrefixDefinition = {
-  if entityPrefixConfig->Array.length > 1 {
-    `  if ` ++
-    entityPrefixConfig
-    ->Array.map(({networks, prefix}) =>
-      `(${networks
-        ->Array.map(network => `network == "${network}"`)
-        ->Array.joinWith(" || ", a => a)}) {
-  return "${prefix}";
-}`
-    )
-    ->Array.joinWith(" else if ", a => a) ++ ` else {
-    return "";
-  }`
-  } else {
-    `  return "";`
-  }
-}
 
 let rec getFieldDefaultTypeNonNull = (~strictMode, ~recersivelyCreateUncreatedEntities, field) =>
   switch field["kind"] {
@@ -214,187 +145,245 @@ let getFieldDefaultTypeWithNull = (
     "unknown"
   }
 
-let functions =
-  entitiesMap
-  ->Js.Dict.keys
-  ->Array.map(entityName => {
-    let entity = entitiesMap->Js.Dict.unsafeGet(entityName)->Obj.magic
+let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
+  let sourceDir = dirname(CodegenConfig.graphManifest)
+  Js.log(sourceDir)
+
+  Js.log(CodegenConfig.codegenConfigPath)
+  let uncrashableConfigString = setUncrashableConfigString(~codegenConfigPath)
+
+  let uncrashableConfig = Utils.loadYaml(uncrashableConfigString)
+
+  let uncrashableConfigErrors = validate(~entityDefinitions, ~uncrashableConfig)
+
+  if uncrashableConfigErrors->Js.Array2.length > 0 {
+    let msg = uncrashableConfigErrors->Js.Array2.reduce((acc, item) =>
+      `${acc}
+    ${item}`
+    , "")
+
+    Js.Exn.raiseTypeError(msg)
+  }
+
+  let enumsMap: Js.Dict.t<enumItem> = Js.Dict.empty()
+  let interfacesMap: Js.Dict.t<interfaceItem> = Js.Dict.empty()
+  let entitiesMap: Js.Dict.t<entityItem> = Js.Dict.empty()
+  entityDefinitions->Array.forEach(entity => {
     let name = entity["name"]["value"]
 
-    let fields = entity["fields"]
-    let fieldsMap = Js.Dict.empty()
-    let _ = fields->Array.map(field => {
-      let fieldName = field["name"]["value"]
-      fieldsMap->Js.Dict.set(fieldName, field)
-    })
-    let entityConfig =
-      uncrashableConfig["entitySettings"]
-      ->Js.Dict.get(name)
-      ->Option.getWithDefault({"useDefault": Js.Dict.empty(), "entityId": None, "setters": None})
+    let entityKind = entity["kind"]
 
-    let fieldDefaultSettersStrict =
-      fields
-      ->Array.map(field => {
+    if name != "_Schema_" {
+      let _ = switch entityKind {
+      | #EnumTypeDefinition => enumsMap->Js.Dict.set(name, entity->Obj.magic)
+      | #InterfaceTypeDefinition => interfacesMap->Js.Dict.set(name, entity->Obj.magic)
+      | #ObjectTypeDefinition => entitiesMap->Js.Dict.set(name, entity->Obj.magic)
+      }
+    }
+  })
+
+  let entityPrefixConfig: array<entityIdPrefix> =
+    uncrashableConfig["networkConfig"]["entityIdPrefixes"]->Option.getWithDefault([])
+
+  let entityPrefixDefinition = {
+    if entityPrefixConfig->Array.length > 1 {
+      `  if ` ++
+      entityPrefixConfig
+      ->Array.map(({networks, prefix}) =>
+        `(${networks
+          ->Array.map(network => `network == "${network}"`)
+          ->Array.joinWith(" || ", a => a)}) {
+  return "${prefix}";
+}`
+      )
+      ->Array.joinWith(" else if ", a => a) ++ ` else {
+    return "";
+  }`
+    } else {
+      `  return "";`
+    }
+  }
+
+  let functions =
+    entitiesMap
+    ->Js.Dict.keys
+    ->Array.map(entityName => {
+      let entity = entitiesMap->Js.Dict.unsafeGet(entityName)->Obj.magic
+      let name = entity["name"]["value"]
+
+      let fields = entity["fields"]
+      let fieldsMap = Js.Dict.empty()
+      let _ = fields->Array.map(field => {
         let fieldName = field["name"]["value"]
-
-        fieldName == "id"
-          ? ""
-          : setInitializeFieldValue(
-              ~name,
-              ~fieldName,
-              ~fieldValue=field["type"]->getFieldDefaultTypeWithNull(
-                ~recersivelyCreateUncreatedEntities=true,
-              ),
-            )
+        fieldsMap->Js.Dict.set(fieldName, field)
       })
-      ->Array.joinWith("\n  ", a => a)
+      let entityConfig =
+        uncrashableConfig["entitySettings"]
+        ->Js.Dict.get(name)
+        ->Option.getWithDefault({"useDefault": Js.Dict.empty(), "entityId": None, "setters": None})
 
-    let fieldsWithDefaultValueLookup = entityConfig["useDefault"]
+      let fieldDefaultSettersStrict =
+        fields
+        ->Array.map(field => {
+          let fieldName = field["name"]["value"]
 
-    let fieldInitialValueSettersStrict =
-      fields
-      ->Array.map(field => {
+          fieldName == "id"
+            ? ""
+            : setInitializeFieldValue(
+                ~name,
+                ~fieldName,
+                ~fieldValue=field["type"]->getFieldDefaultTypeWithNull(
+                  ~recersivelyCreateUncreatedEntities=true,
+                ),
+              )
+        })
+        ->Array.joinWith("\n  ", a => a)
+
+      let fieldsWithDefaultValueLookup = entityConfig["useDefault"]
+
+      let fieldInitialValueSettersStrict =
+        fields
+        ->Array.map(field => {
+          let fieldName = field["name"]["value"]
+
+          if fieldName == "id" {
+            loadNewEntityId(~name)
+          } else {
+            fieldsWithDefaultValueLookup
+            ->Js.Dict.get(fieldName)
+            ->Option.mapWithDefault(
+              {
+                let fieldNameOrEntityIds = getFieldValueToSave("initialValues", field)
+
+                setInitializeFieldValue(~name, ~fieldName, ~fieldValue=fieldNameOrEntityIds)
+              },
+              _fieldDefaultConfig =>
+                setInitializeFieldValue(
+                  ~name,
+                  ~fieldName,
+                  ~fieldValue=field["type"]->getFieldDefaultTypeWithNull(~strictMode=false),
+                ),
+            )
+          }
+        })
+        ->Array.joinWith("\n", a => a)
+
+      let fieldToFieldTyping = field => {
         let fieldName = field["name"]["value"]
-
         if fieldName == "id" {
-          loadNewEntityId(~name)
+          ""
         } else {
           fieldsWithDefaultValueLookup
           ->Js.Dict.get(fieldName)
           ->Option.mapWithDefault(
-            {
-              let fieldNameOrEntityIds = getFieldValueToSave("initialValues", field)
-
-              setInitializeFieldValue(~name, ~fieldName, ~fieldValue=fieldNameOrEntityIds)
-            },
-            _fieldDefaultConfig =>
-              setInitializeFieldValue(
-                ~name,
-                ~fieldName,
-                ~fieldValue=field["type"]->getFieldDefaultTypeWithNull(~strictMode=false),
-              ),
+            setFieldNameToFieldType(
+              ~fieldName,
+              ~fieldType=field["type"]->getFieldType(~entityAsIdString=true),
+            ),
+            _ => "",
           )
         }
-      })
-      ->Array.joinWith("\n", a => a)
-
-    let fieldToFieldTyping = field => {
-      let fieldName = field["name"]["value"]
-      if fieldName == "id" {
-        ""
-      } else {
-        fieldsWithDefaultValueLookup
-        ->Js.Dict.get(fieldName)
-        ->Option.mapWithDefault(
-          setFieldNameToFieldType(
-            ~fieldName,
-            ~fieldType=field["type"]->getFieldType(~entityAsIdString=true),
-          ),
-          _ => "",
-        )
       }
-    }
-    let fieldInitialValues = fields->Array.map(fieldToFieldTyping)->Array.joinWith("", a => a)
+      let fieldInitialValues = fields->Array.map(fieldToFieldTyping)->Array.joinWith("", a => a)
 
-    let idGeneratorFunction =
-      entityConfig["entityId"]
-      ->Option.map(idArgs => {
-        let argsDefinition =
-          idArgs
-          ->Array.keep(arg => arg["type"] != "constant")
-          ->Array.joinWith(",", arg => `${arg["name"]}: ${arg["type"]}`)
-        // no string interpolation in assemblyscript :(
-        let idString = idArgs->Array.joinWith(` + "-" + `, arg =>
-          if arg["type"] != "constant" {
-            toStringConverter(arg["name"], arg["type"])
-          } else {
-            `"${arg["value"]}"`
-          }
-        )
+      let idGeneratorFunction =
+        entityConfig["entityId"]
+        ->Option.map(idArgs => {
+          let argsDefinition =
+            idArgs
+            ->Array.keep(arg => arg["type"] != "constant")
+            ->Array.joinWith(",", arg => `${arg["name"]}: ${arg["type"]}`)
+          // no string interpolation in assemblyscript :(
+          let idString = idArgs->Array.joinWith(` + "-" + `, arg =>
+            if arg["type"] != "constant" {
+              toStringConverter(arg["name"], arg["type"])
+            } else {
+              `"${arg["value"]}"`
+            }
+          )
 
-        generateId(~name, ~argsDefinition, ~idString)
-      })
-      ->Option.getWithDefault("")
+          generateId(~name, ~argsDefinition, ~idString)
+        })
+        ->Option.getWithDefault("")
 
-    let fieldSetterFunctions =
-      entityConfig["setters"]
-      ->Option.map(setterFunctions => {
-        let functions =
-          setterFunctions
-          ->Array.map(setter => {
-            let functionName = setter["name"]
-            let functionSetterFields = setter["fields"]
-            let fieldTypeDef =
-              functionSetterFields
-              ->Array.map(field => {
-                let result =
-                  fieldsMap
-                  ->Js.Dict.get(field)
-                  ->Option.mapWithDefault(
-                    fieldNotFoundForEntity(~field, ~functionName, ~name),
-                    fieldDefinition =>
-                      setField(
-                        ~field,
-                        ~fieldValue=fieldDefinition["type"]->getFieldType(~entityAsIdString=true),
-                      ),
-                  )
+      let fieldSetterFunctions =
+        entityConfig["setters"]
+        ->Option.map(setterFunctions => {
+          let functions =
+            setterFunctions
+            ->Array.map(setter => {
+              let functionName = setter["name"]
+              let functionSetterFields = setter["fields"]
+              let fieldTypeDef =
+                functionSetterFields
+                ->Array.map(field => {
+                  let result =
+                    fieldsMap
+                    ->Js.Dict.get(field)
+                    ->Option.mapWithDefault(
+                      fieldNotFoundForEntity(~field, ~functionName, ~name),
+                      fieldDefinition =>
+                        setField(
+                          ~field,
+                          ~fieldValue=fieldDefinition["type"]->getFieldType(~entityAsIdString=true),
+                        ),
+                    )
 
-                result
-              })
-              ->Array.joinWith("", a => a)
-            let fieldTypeSetters =
-              functionSetterFields
-              ->Array.map(field => {
-                let result =
-                  fieldsMap
-                  ->Js.Dict.get(field)
-                  ->Option.mapWithDefault(fieldNotFoundForEntity(~field, ~functionName, ~name), _ =>
-                    setFieldToNewValue(~field)
-                  )
+                  result
+                })
+                ->Array.joinWith("", a => a)
+              let fieldTypeSetters =
+                functionSetterFields
+                ->Array.map(field => {
+                  let result =
+                    fieldsMap
+                    ->Js.Dict.get(field)
+                    ->Option.mapWithDefault(
+                      fieldNotFoundForEntity(~field, ~functionName, ~name),
+                      _ => setFieldToNewValue(~field),
+                    )
 
-                result
-              })
-              ->Array.joinWith("", a => a)
+                  result
+                })
+                ->Array.joinWith("", a => a)
 
-            createSetterFunction(~functionName, ~fieldTypeDef, ~name, ~fieldTypeSetters)
-          })
-          ->Array.joinWith("\n", arg => arg)
-        functions
-      })
-      ->Option.getWithDefault("")
-    entityGeneratedCode(
-      ~idGeneratorFunction,
-      ~name,
-      ~fieldDefaultSettersStrict,
-      ~fieldInitialValues,
-      ~fieldInitialValueSettersStrict,
-      ~fieldSetterFunctions,
-    )
-  })
-  ->Array.joinWith("\n", a => a)
+              createSetterFunction(~functionName, ~fieldTypeDef, ~name, ~fieldTypeSetters)
+            })
+            ->Array.joinWith("\n", arg => arg)
+          functions
+        })
+        ->Option.getWithDefault("")
+      entityGeneratedCode(
+        ~idGeneratorFunction,
+        ~name,
+        ~fieldDefaultSettersStrict,
+        ~fieldInitialValues,
+        ~fieldInitialValueSettersStrict,
+        ~fieldSetterFunctions,
+      )
+    })
+    ->Array.joinWith("\n", a => a)
 
-let entityImports =
-  entityDefinitions
-  ->Array.keep(entity => {
-    entity["kind"] != #EnumTypeDefinition &&
-    entity["kind"] != #InterfaceTypeDefinition &&
-    entity["name"]["value"] != "_Schema_"
-  })
-  ->Array.map(entity => `  ${entity["name"]["value"]}`)
-  ->Array.joinWith(",\n", a => a)
+  let entityImports =
+    entityDefinitions
+    ->Array.keep(entity => {
+      entity["kind"] != #EnumTypeDefinition &&
+      entity["kind"] != #InterfaceTypeDefinition &&
+      entity["name"]["value"] != "_Schema_"
+    })
+    ->Array.map(entity => `  ${entity["name"]["value"]}`)
+    ->Array.joinWith(",\n", a => a)
 
-let dir = CodegenConfig.outputEntityFilePath
+  let dir = outputFilePath
 
-@module("fs")
-external mkdirSync: (~dir: string) => unit = "mkdirSync"
+  if !Node_fs.existsSync(dir) {
+    mkdirSync(~dir)
+  }
 
-if !Node_fs.existsSync(dir) {
-  mkdirSync(~dir)
+  Node_fs.writeFileAsUtf8Sync(
+    `${outputFilePath}UncrashableHelpers.ts`,
+    outputCode(~entityImports, ~networkIdPrefix=entityPrefixDefinition, ~functions),
+  )
+
+  Js.log(`Output saved to ${outputFilePath}UncrashableHelpers.ts`)
 }
-
-Node_fs.writeFileAsUtf8Sync(
-  `${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`,
-  outputCode(~entityImports, ~networkIdPrefix=entityPrefixDefinition, ~functions),
-)
-
-Js.log(`Output saved to ${CodegenConfig.outputEntityFilePath}UncrashableHelpers.ts`)
