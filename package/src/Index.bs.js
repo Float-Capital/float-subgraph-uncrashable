@@ -121,7 +121,7 @@ function getFieldValueToSave(nameOfObject, field) {
   switch (match) {
     case /* NormalValue */0 :
     case /* Entity */1 :
-        return nameOfObject + "." + field.name.value;
+        return "" + nameOfObject + "." + field.name.value + "";
     case /* EntityArray */2 :
         return "(" + nameOfObject + "." + field.name.value + ")";
     
@@ -181,7 +181,7 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
   var uncrashableConfigErrors = UncrashableValidation.validate(entityDefinitions, uncrashableConfig);
   if (uncrashableConfigErrors.length > 0) {
     Js_exn.raiseTypeError(uncrashableConfigErrors.reduce((function (acc, item) {
-                return acc + "\n    " + item;
+                return "" + acc + "\n    " + item + "";
               }), ""));
   }
   var enumsMap = {};
@@ -220,7 +220,6 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
               Belt_Array.map(fields, (function (field) {
                       var fieldName = field.name.value;
                       fieldsMap[fieldName] = field;
-                      
                     }));
               var entityConfig = Belt_Option.getWithDefault(Js_dict.get(uncrashableConfig.entitySettings, name), {
                     useDefault: {},
@@ -267,7 +266,7 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
                           var argsDefinition = Belt_Array.joinWith(Belt_Array.keep(idArgs, (function (arg) {
                                       return arg.type !== "constant";
                                     })), ",", (function (arg) {
-                                  return arg.name + ": " + arg.type;
+                                  return "" + arg.name + ": " + arg.type + "";
                                 }));
                           var idString = Belt_Array.joinWith(idArgs, " + \"-\" + ", (function (arg) {
                                   if (arg.type !== "constant") {
@@ -312,16 +311,15 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
                     return false;
                   }
                 })), (function (entity) {
-              return "  " + entity.name.value;
+              return "  " + entity.name.value + "";
             })), ",\n", (function (a) {
           return a;
         }));
   if (!Fs.existsSync(outputFilePath)) {
     Fs.mkdirSync(outputFilePath);
   }
-  Fs.writeFileSync(outputFilePath + "/UncrashableEntityHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
+  Fs.writeFileSync("" + outputFilePath + "/UncrashableEntityHelpers.ts", GraphEntityGenTemplates.outputCode(entityImports, entityPrefixDefinition, functions), "utf8");
   console.log("Output saved to " + outputFilePath + "/UncrashableEntityHelpers.ts");
-  
 }
 
 exports.UncrashableFileNotFound = UncrashableFileNotFound;

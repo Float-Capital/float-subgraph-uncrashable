@@ -101,7 +101,6 @@ function validateValue(config, rootName) {
   Belt_Array.map(fields, (function (field) {
           var fieldName = field.name.value;
           fieldsMap[fieldName] = field;
-          
         }));
   Belt_Array.map(Object.keys(fieldsMap), (function (fieldName) {
           var field = fieldsMap[fieldName];
@@ -113,7 +112,6 @@ function validateValue(config, rootName) {
               if (configEntity.length !== 0) {
                 Belt_Array.map(configEntity, (function (listItem) {
                         validateValue(listItem, fieldType);
-                        
                       }));
               } else {
                 errors.push("Missing elements for field: " + fieldName + " in uncrashable-config.yaml");
@@ -124,7 +122,6 @@ function validateValue(config, rootName) {
             return ;
           }
           validateFieldType(config, fieldName, field);
-          
         }));
   Belt_Array.map(Object.keys(config), (function (entityName) {
           if (Belt_Option.isSome(Js_dict.get(fieldsMap, entityName)) || Belt_Option.isSome(Js_dict.get(entitiesMap, entityName))) {
@@ -134,7 +131,6 @@ function validateValue(config, rootName) {
             return ;
           }
         }));
-  
 }
 
 function validateSchema(config) {
@@ -155,7 +151,6 @@ function validateSchema(config) {
           Belt_Array.map(fields, (function (field) {
                   var fieldName = field.name.value;
                   fieldsMap[fieldName] = field;
-                  
                 }));
           Belt_Option.map(Js_dict.get(entitySettings, name), (function (configEntity) {
                   Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(configEntity, "setters"), (function (setterFunctions) {
@@ -167,33 +162,27 @@ function validateSchema(config) {
                                                 if (Belt_Option.isSome(Js_dict.get(fieldsMap, field))) {
                                                   return ;
                                                 } else {
-                                                  errors.push("Unexpected field " + field + " in setter: " + functionName + ", entity: " + entityName);
+                                                  errors.push("Unexpected field " + field + " in setter: " + functionName + ", entity: " + entityName + "");
                                                   return ;
                                                 }
                                               }));
                                       } else {
-                                        errors.push("Missing setter fields for " + functionName + ", entity: " + entityName);
+                                        errors.push("Missing setter fields for " + functionName + ", entity: " + entityName + "");
                                       }
-                                      
                                     }));
-                              
                             })), undefined);
                   Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(configEntity, "entityId"), (function (idArgs) {
                               Belt_Array.map(idArgs, (function (arg) {
                                       var argType = Belt_Option.getWithDefault(arg.type, "");
                                       if (!confirmTypeIsSupported(argType)) {
-                                        errors.push("Unsupported entityId type " + argType + ", variable name: " + arg.name + ", entity: " + entityName);
+                                        errors.push("Unsupported entityId type " + argType + ", variable name: " + arg.name + ", entity: " + entityName + "");
                                         return ;
                                       }
                                       
                                     }));
-                              
                             })), undefined);
-                  
                 }));
-          
         }));
-  
 }
 
 function validate(entityDefinitions, uncrashableConfig) {
@@ -209,7 +198,6 @@ function validate(entityDefinitions, uncrashableConfig) {
           } else {
             enumsMap[name] = entity;
           }
-          
         }));
   Belt_Array.forEach(configTemplateDefinitions, (function (entity) {
           var name = entity.name.value;
@@ -221,7 +209,6 @@ function validate(entityDefinitions, uncrashableConfig) {
           } else {
             enumsMap[name] = entity;
           }
-          
         }));
   validateValue(uncrashableConfig, "UncrashableConfig");
   validateSchema(uncrashableConfig);
