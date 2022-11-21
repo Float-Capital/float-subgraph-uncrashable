@@ -15,8 +15,10 @@
   "dependencies": {
     "graphql": "^16.6.0",
     "graphql-import-node": "^0.0.5",
-    "js-yaml": "^4.1.0",
-    "rescript": "^9.1.4"
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "rescript": "^10.0.1"
   },
   "scripts": {
     "res:build": "rescript build",

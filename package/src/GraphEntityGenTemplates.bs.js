@@ -48,10 +48,10 @@ function toStringConverter(paramName, paramType) {
   switch (paramType) {
     case "BigDecimal" :
     case "BigInt" :
-        return paramName + ".toString()";
+        return "" + paramName + ".toString()";
     case "Address" :
     case "Bytes" :
-        return paramName + ".toHex()";
+        return "" + paramName + ".toHex()";
     case "String" :
         return paramName;
     default:
