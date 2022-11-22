@@ -2,13 +2,13 @@
 'use strict';
 
 var Fs = require("fs");
-var Js_exn = require("rescript/lib/js/js_exn.js");
-var Js_dict = require("rescript/lib/js/js_dict.js");
+var Js_exn = require("@rescript/std/lib/js/js_exn.js");
+var Js_dict = require("@rescript/std/lib/js/js_dict.js");
 var JsYaml = require("js-yaml");
-var Belt_Array = require("rescript/lib/js/belt_Array.js");
-var Belt_Option = require("rescript/lib/js/belt_Option.js");
-var Caml_exceptions = require("rescript/lib/js/caml_exceptions.js");
-var Caml_js_exceptions = require("rescript/lib/js/caml_js_exceptions.js");
+var Belt_Array = require("@rescript/std/lib/js/belt_Array.js");
+var Belt_Option = require("@rescript/std/lib/js/belt_Option.js");
+var Caml_exceptions = require("@rescript/std/lib/js/caml_exceptions.js");
+var Caml_js_exceptions = require("@rescript/std/lib/js/caml_js_exceptions.js");
 var UncrashableValidation = require("./validation/UncrashableValidation.bs.js");
 var GraphEntityGenTemplates = require("./GraphEntityGenTemplates.bs.js");
 

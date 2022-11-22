@@ -13,15 +13,14 @@
     "uncrashable": "bin/uncrashable"
   },
   "dependencies": {
+    "@rescript/std": "9.0.0",
+    "graphql": "^16.6.0",
     "graphql-import-node": "^0.0.5",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "bs-platform": "9.0.0",
     "rescript": "^10.0.1"
-  },
-
-  "peerDependencies": {
-    "graphql": "^16.6.0"
   },
   "scripts": {
     "res:build": "rescript build",
