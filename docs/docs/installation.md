@@ -41,4 +41,4 @@ The Subgraph Uncrashable tool can be installed using `npm` or `yarn`:
 
 Run the graph uncrashable codegen as a standalone package:
 
-```graph codegen```
+```uncrashable```
