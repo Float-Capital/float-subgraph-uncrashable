@@ -20,3 +20,5 @@ The code generation tool accommodates all subgraph types and is configurable for
 The framework also includes a way (via the config file) to create custom but safe setter functions for groups of entity variables. This way it is impossible for the user to load/use a stale graph entity and it is also impossible to forget to save or set a variable that is required by the function.
 
 Warning logs are recorded as warning logs indicating where there is a breach of subgraph logic to help patch the issue to ensure data accuracy. These logs can be viewed in the The Graph's hosted service under the 'Logs' section. 
+
+See the next section for steps on installing and integrating subgraph uncrashable into your subgraph.
