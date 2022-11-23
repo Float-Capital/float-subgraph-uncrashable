@@ -19,7 +19,7 @@ In August 2022, the Float team decided that the use of this tool would benefit a
 
 🎉 [The Graph Foundation Allocates Nearly $1M in Wave 6 of Grants](https://thegraph.com/blog/wave-six-grants/) 🎉
 
-> “Credits are owed to the amazing team running The Graph Foundation Grants Program. “Float is extremely grateful to be contributing to the graph ecosystem and providing builders with more confidence in their subgraph development.” - Jason Smythe, Co-Founder at Float
+> “Credits are owed to the amazing team running The Graph Foundation Grants Program. Float is extremely grateful to be contributing to the graph ecosystem and providing builders with more confidence in their subgraph development.” - Jason Smythe, Co-Founder at Float
 
 Any project building or upgrading a subgraph can use this tool to make their subgraphs “uncrashable” and ensure continuous uptime :rocket:
 
