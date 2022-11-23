@@ -17,4 +17,10 @@ The Float team has found strategies to make subgraphs more type-safe via a varie
 
 In August 2022, the Float team decided that the use of this tool would benefit any subgraph developer and ultimately benefit overall Graph ecosystem, and applied for a grant with The Graph Foundation. After successful application, Float received funding to decouple the tool from its current hard-coded integration,  package the code generation tool into a stand-alone application, open-source it, and integrate with the [Graph CLI](https://thegraph.com/docs/en/cookbook/quick-start/). 
 
-Any project building or upgrading a subgraph could use this tool to make their subgraphs “uncrashable” and ensure continuous uptime :rocket:
+🎉 [The Graph Foundation Allocates Nearly $1M in Wave 6 of Grants](https://thegraph.com/blog/wave-six-grants/) 🎉
+
+> “Credits are owed to the amazing team running The Graph Foundation Grants Program. “Float is extremely grateful to be contributing to the graph ecosystem and providing builders with more confidence in their subgraph development.” - Jason Smythe, Co-Founder at Float
+
+Any project building or upgrading a subgraph can use this tool to make their subgraphs “uncrashable” and ensure continuous uptime :rocket:
+
+![subgraph morgan](/img/subgraph-morgan.jpg)
