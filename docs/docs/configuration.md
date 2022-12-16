@@ -58,9 +58,9 @@ The `networkConfig` specification in the `uncrashable-config.yaml` allows for sp
 
 Required fields:
 
-- `entityIdPrefixes` — An array of `networks` and `prefix`
-- `networks` — An array of all networks that would correspond to the prefix
-- `prefix` - A string appended to the start of any ID on that specific network
+- `entityIdPrefixes` — An array of `networks` and `prefix`.
+- `networks` — An array of all networks that would correspond to the prefix.
+- `prefix` - A string appended to the start of any ID on that specific network. This is useful to differentiate entities in a multi-chain application.
 
 Example of generated function for the Gravatar Entity ID as per the above configuration:
 
@@ -75,9 +75,9 @@ export function generateGravatarId(gravityId: BigInt): string {
 The `entitySettings` field allows for specifying the configuration of any entity in the subgraph schema.
 The following fields are supported:
 
-- `useDefault` — Specify which entity parameters are defaulted when creating the entity
-- `entityId` — Specify the fields and their types that will comprise the ID of the entity. (This ensures standardization of all entity IDs) - see generated example above
-- `setters` - An array of setter functions that can be used to be set or update entity parameters after initial creation of the entity
+- `useDefault` — Specify which entity parameters are defaulted when creating the entity.
+- `entityId` — Specify the fields and their types that will comprise the ID of the entity. (This ensures standardization of all entity IDs) - see generated example above.
+- `setters` - An array of setter functions that can be used to be set or update entity parameters after initial creation of the entity.
 
 ### entityId
 
@@ -125,12 +125,14 @@ export function updateGravatar(
 Once the `uncrashable-config.yaml` has been created run the following:
 
 ```sh
-graph codegen
+graph codegen -u
 ```
 
 and then run the graph uncrashable codegen.
 
 Now you can import the generated functions from the `UncrashableHelpers.ts` into your subgraph mapping files.
+
+Additionally the `-uc <path-to-config>` flag can be used to set the config file used by uncrashable. This is useful if you have multiple configurations in the same codebase. Along the same lines the output folder can be renamed using the `-o <folder-name>` command.
 
 ## Usage examples from the above uncrashable-config.yaml
 
