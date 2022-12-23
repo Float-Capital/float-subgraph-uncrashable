@@ -10,8 +10,6 @@ exception UncrashableFileNotFound(string)
 @module("fs")
 external mkdirSync: (~dir: string) => unit = "mkdirSync"
 
-@val external requireGqlFile: string => 'a = "require"
-
 let setUncrashableConfigString = (~codegenConfigPath) => {
   try {
     Node_fs.readFileAsUtf8Sync(codegenConfigPath)
@@ -290,12 +288,14 @@ let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
             ->Array.keep(arg => arg["type"] != "constant")
             ->Array.joinWith(",", arg => `${arg["name"]}: ${arg["type"]}`)
           // no string interpolation in assemblyscript :(
-          let idString = idArgs->Array.joinWith(` + "-" + `, arg =>
-            if arg["type"] != "constant" {
-              toStringConverter(arg["name"], arg["type"])
-            } else {
-              `"${arg["value"]}"`
-            }
+          let idString = idArgs->Array.joinWith(
+            ` + "-" + `,
+            arg =>
+              if arg["type"] != "constant" {
+                toStringConverter(arg["name"], arg["type"])
+              } else {
+                `"${arg["value"]}"`
+              },
           )
 
           generateId(~name, ~argsDefinition, ~idString)
@@ -307,44 +307,52 @@ let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
         ->Option.map(setterFunctions => {
           let functions =
             setterFunctions
-            ->Array.map(setter => {
-              let functionName = setter["name"]
-              let functionSetterFields = setter["fields"]
-              let fieldTypeDef =
-                functionSetterFields
-                ->Array.map(field => {
-                  let result =
-                    fieldsMap
-                    ->Js.Dict.get(field)
-                    ->Option.mapWithDefault(
-                      fieldNotFoundForEntity(~field, ~functionName, ~name),
-                      fieldDefinition =>
-                        setField(
-                          ~field,
-                          ~fieldValue=fieldDefinition["type"]->getFieldType(~entityAsIdString=true),
-                        ),
-                    )
+            ->Array.map(
+              setter => {
+                let functionName = setter["name"]
+                let functionSetterFields = setter["fields"]
+                let fieldTypeDef =
+                  functionSetterFields
+                  ->Array.map(
+                    field => {
+                      let result =
+                        fieldsMap
+                        ->Js.Dict.get(field)
+                        ->Option.mapWithDefault(
+                          fieldNotFoundForEntity(~field, ~functionName, ~name),
+                          fieldDefinition =>
+                            setField(
+                              ~field,
+                              ~fieldValue=fieldDefinition["type"]->getFieldType(
+                                ~entityAsIdString=true,
+                              ),
+                            ),
+                        )
 
-                  result
-                })
-                ->Array.joinWith("", a => a)
-              let fieldTypeSetters =
-                functionSetterFields
-                ->Array.map(field => {
-                  let result =
-                    fieldsMap
-                    ->Js.Dict.get(field)
-                    ->Option.mapWithDefault(
-                      fieldNotFoundForEntity(~field, ~functionName, ~name),
-                      _ => setFieldToNewValue(~field),
-                    )
+                      result
+                    },
+                  )
+                  ->Array.joinWith("", a => a)
+                let fieldTypeSetters =
+                  functionSetterFields
+                  ->Array.map(
+                    field => {
+                      let result =
+                        fieldsMap
+                        ->Js.Dict.get(field)
+                        ->Option.mapWithDefault(
+                          fieldNotFoundForEntity(~field, ~functionName, ~name),
+                          _ => setFieldToNewValue(~field),
+                        )
 
-                  result
-                })
-                ->Array.joinWith("", a => a)
+                      result
+                    },
+                  )
+                  ->Array.joinWith("", a => a)
 
-              createSetterFunction(~functionName, ~fieldTypeDef, ~name, ~fieldTypeSetters)
-            })
+                createSetterFunction(~functionName, ~fieldTypeDef, ~name, ~fieldTypeSetters)
+              },
+            )
             ->Array.joinWith("\n", arg => arg)
           functions
         })

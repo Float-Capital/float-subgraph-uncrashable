@@ -20,7 +20,7 @@ let confirmTypeIsSupported = argType => {
   | "Address"
   | "constant"
   | "BigDecimal" => true
-  | uncaught => false
+  | _uncaught => false
   }
 }
 
@@ -50,6 +50,7 @@ let rec validateFieldType = (~config, ~fieldName, field) => {
       let fieldType = field["type"]["name"]->getNamedType
       (fieldType, false)
     }
+
   | #ListType =>
     let (fieldType, _) = field["type"]->validateFieldType(~config, ~fieldName)
     (fieldType, true)
@@ -61,14 +62,14 @@ let rec validateFieldType = (~config, ~fieldName, field) => {
       let _ = errors->Js.Array2.push(`Missing field: ${fieldName} in uncrashable-config.yaml`)
       ("unhandled", false)
     }
-  | uncaught => ("uncaught", false)
+  | _uncaught => ("uncaught", false)
   }
 }
 
 let rec validateValue = (~config, ~rootName) => {
   if configEntityMap->Js.Dict.get(rootName)->Option.isSome {
     let entity = configEntityMap->Js.Dict.unsafeGet(rootName)->Obj.magic
-    let kind = entity["kind"]
+    let _kind = entity["kind"]
     let fields = entity["fields"]
 
     let fieldsMap = Js.Dict.empty()
@@ -154,47 +155,58 @@ let validateSchema = (~config) => {
           let _ =
             configEntity
             ->Js.Dict.get("setters")
-            ->Option.map(setterFunctions => {
-              let functions = setterFunctions->Array.map(setter => {
-                let functionName = setter["name"]
-                let functionSetterFields = setter["fields"]->Option.getWithDefault([])
-                if (
-                  functionSetterFields->Js.Array.isArray && functionSetterFields->Array.length > 0
-                ) {
-                  let fieldTypeDef = functionSetterFields->Array.map(field => {
-                    if fieldsMap->Js.Dict.get(field)->Option.isSome {
-                      ()
+            ->Option.map(
+              setterFunctions => {
+                let _functions = setterFunctions->Array.map(
+                  setter => {
+                    let functionName = setter["name"]
+                    let functionSetterFields = setter["fields"]->Option.getWithDefault([])
+                    if (
+                      functionSetterFields->Js.Array.isArray &&
+                        functionSetterFields->Array.length > 0
+                    ) {
+                      let _fieldTypeDef = functionSetterFields->Array.map(
+                        field => {
+                          if fieldsMap->Js.Dict.get(field)->Option.isSome {
+                            ()
+                          } else {
+                            let _ =
+                              errors->Js.Array2.push(
+                                `Unexpected field ${field} in setter: ${functionName}, entity: ${entityName}`,
+                              )
+                          }
+                        },
+                      )
                     } else {
                       let _ =
                         errors->Js.Array2.push(
-                          `Unexpected field ${field} in setter: ${functionName}, entity: ${entityName}`,
+                          `Missing setter fields for ${functionName}, entity: ${entityName}`,
                         )
                     }
-                  })
-                } else {
-                  let _ =
-                    errors->Js.Array2.push(
-                      `Missing setter fields for ${functionName}, entity: ${entityName}`,
-                    )
-                }
-              })
-            })
+                  },
+                )
+              },
+            )
             ->Option.getWithDefault()
 
           let _ =
             configEntity
             ->Js.Dict.get("entityId")
-            ->Option.map(idArgs => {
-              let idString = idArgs->Array.map(arg => {
-                let argType = arg["type"]->Option.getWithDefault("")
-                if !confirmTypeIsSupported(argType) {
-                  let _ =
-                    errors->Js.Array2.push(
-                      `Unsupported entityId type ${argType}, variable name: ${arg["name"]}, entity: ${entityName}`,
-                    )
-                }
-              })
-            })
+            ->Option.map(
+              idArgs => {
+                let _idString = idArgs->Array.map(
+                  arg => {
+                    let argType = arg["type"]->Option.getWithDefault("")
+                    if !confirmTypeIsSupported(argType) {
+                      let _ =
+                        errors->Js.Array2.push(
+                          `Unsupported entityId type ${argType}, variable name: ${arg["name"]}, entity: ${entityName}`,
+                        )
+                    }
+                  },
+                )
+              },
+            )
             ->Option.getWithDefault()
         })
     })
