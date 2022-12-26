@@ -245,7 +245,14 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
               var fieldsMap = {};
               Belt_Array.map(fields, (function (field) {
                       var fieldName = field.name.value;
-                      fieldsMap[fieldName] = field;
+                      var isDerivedFromField = Belt_Array.keep(field.directives, (function (directive) {
+                              return directive.name.value === "derivedFrom";
+                            })).length !== 0;
+                      if (!isDerivedFromField) {
+                        fieldsMap[fieldName] = field;
+                        return ;
+                      }
+                      
                     }));
               var entityConfig = Belt_Option.getWithDefault(Js_dict.get(uncrashableConfig.entitySettings, name), {
                     useDefault: {},
