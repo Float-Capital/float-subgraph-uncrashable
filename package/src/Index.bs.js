@@ -97,47 +97,39 @@ function getFieldType(_entityAsIdStringOpt, _field) {
     var entityAsIdStringOpt = _entityAsIdStringOpt;
     var field = _field;
     var entityAsIdString = entityAsIdStringOpt !== undefined ? entityAsIdStringOpt : false;
-    var uncaught = field.kind;
-    if (uncaught === "NonNullType") {
-      _field = field.type;
-      _entityAsIdStringOpt = entityAsIdString;
-      continue ;
-    }
-    if (uncaught === "NamedType") {
+    var match = field.kind;
+    if (match === "NamedType") {
       return getNamedType(entityAsIdString, field.name);
     }
-    if (uncaught === "ListType") {
-      var innerType = getFieldType(entityAsIdString, field.type);
+    if (match === "ListType") {
+      var innerType = getFieldType(entityAsIdString, Belt_Option.getExn(field.type));
       return "Array<" + innerType + ">";
     }
-    console.log(uncaught);
-    return "unknown";
+    _field = Belt_Option.getExn(field.type);
+    _entityAsIdStringOpt = entityAsIdString;
+    continue ;
   };
 }
 
 function getFieldSetterType(_field) {
   while(true) {
     var field = _field;
-    var uncaught = field.kind;
-    if (uncaught !== "NonNullType") {
-      if (uncaught === "NamedType") {
-        if (Belt_Option.isSome(Js_dict.get(UncrashableValidation.entitiesMap, field.name.value))) {
-          return /* Entity */1;
-        } else {
-          return /* NormalValue */0;
-        }
-      } else if (uncaught === "ListType") {
-        if (getFieldSetterType(field.type) === /* Entity */1) {
-          return /* EntityArray */2;
-        } else {
-          return /* NormalValue */0;
-        }
+    var match = field.kind;
+    if (match === "NamedType") {
+      if (Belt_Option.isSome(Js_dict.get(UncrashableValidation.entitiesMap, field.name.value))) {
+        return /* Entity */1;
       } else {
-        console.log("Uncaught entity type", uncaught);
         return /* NormalValue */0;
       }
     }
-    _field = field.type;
+    if (match === "ListType") {
+      if (getFieldSetterType(Belt_Option.getExn(field.type)) === /* Entity */1) {
+        return /* EntityArray */2;
+      } else {
+        return /* NormalValue */0;
+      }
+    }
+    _field = Belt_Option.getExn(field.type);
     continue ;
   };
 }
@@ -171,18 +163,18 @@ function getDefaultValueForType(strictMode, recersivelyCreateUncreatedEntities, 
 function getFieldDefaultTypeNonNull(strictMode, recersivelyCreateUncreatedEntities, _field) {
   while(true) {
     var field = _field;
-    var uncaught = field.kind;
-    if (uncaught !== "NonNullType") {
-      if (uncaught === "NamedType") {
-        return getDefaultValueForType(strictMode, recersivelyCreateUncreatedEntities, field.name.value);
-      } else if (uncaught === "ListType") {
-        return "[]";
-      } else {
-        console.log(uncaught);
-        return "unknown";
-      }
+    var match = field.kind;
+    if (match === "NamedType") {
+      return getDefaultValueForType(strictMode, recersivelyCreateUncreatedEntities, field.name.value);
     }
-    _field = field.type;
+    if (match === "ListType") {
+      return "[]";
+    }
+    var fieldType = field.type;
+    if (fieldType === undefined) {
+      return "";
+    }
+    _field = fieldType;
     continue ;
   };
 }
@@ -190,15 +182,22 @@ function getFieldDefaultTypeNonNull(strictMode, recersivelyCreateUncreatedEntiti
 function getFieldDefaultTypeWithNull(strictModeOpt, recersivelyCreateUncreatedEntitiesOpt, field) {
   var strictMode = strictModeOpt !== undefined ? strictModeOpt : true;
   var recersivelyCreateUncreatedEntities = recersivelyCreateUncreatedEntitiesOpt !== undefined ? recersivelyCreateUncreatedEntitiesOpt : false;
-  var uncaught = field.kind;
-  if (uncaught === "NonNullType") {
-    return getFieldDefaultTypeNonNull(strictMode, recersivelyCreateUncreatedEntities, field.type);
-  } else if (uncaught === "ListType" || uncaught === "NamedType") {
+  var match = field.kind;
+  if (match === "ListType" || match === "NamedType") {
     return "null";
-  } else {
-    console.log(uncaught);
-    return "unknown";
   }
+  var fieldType = field.type;
+  if (fieldType !== undefined) {
+    return getFieldDefaultTypeNonNull(strictMode, recersivelyCreateUncreatedEntities, fieldType);
+  } else {
+    return "";
+  }
+}
+
+function isFieldDerived(field) {
+  return Belt_Array.keep(field.directives, (function (directive) {
+                return directive.name.value === "derivedFrom";
+              })).length !== 0;
 }
 
 function run(entityDefinitions, codegenConfigPath, outputFilePath) {
@@ -241,18 +240,13 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
   var functions = Belt_Array.joinWith(Belt_Array.map(Object.keys(entitiesMap), (function (entityName) {
               var entity = entitiesMap[entityName];
               var name = entity.name.value;
-              var fields = entity.fields;
+              var fields = Belt_Array.keep(entity.fields, (function (field) {
+                      return !isFieldDerived(field);
+                    }));
               var fieldsMap = {};
               Belt_Array.map(fields, (function (field) {
                       var fieldName = field.name.value;
-                      var isDerivedFromField = Belt_Array.keep(field.directives, (function (directive) {
-                              return directive.name.value === "derivedFrom";
-                            })).length !== 0;
-                      if (!isDerivedFromField) {
-                        fieldsMap[fieldName] = field;
-                        return ;
-                      }
-                      
+                      fieldsMap[fieldName] = field;
                     }));
               var entityConfig = Belt_Option.getWithDefault(Js_dict.get(uncrashableConfig.entitySettings, name), {
                     useDefault: {},
@@ -365,5 +359,6 @@ exports.getFieldValueToSave = getFieldValueToSave;
 exports.getDefaultValueForType = getDefaultValueForType;
 exports.getFieldDefaultTypeNonNull = getFieldDefaultTypeNonNull;
 exports.getFieldDefaultTypeWithNull = getFieldDefaultTypeWithNull;
+exports.isFieldDerived = isFieldDerived;
 exports.run = run;
 /*  Not a pure module */

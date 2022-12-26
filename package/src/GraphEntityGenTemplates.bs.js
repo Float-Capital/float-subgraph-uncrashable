@@ -23,24 +23,21 @@ function setFieldNameToFieldType(fieldName, fieldType) {
   return "  " + fieldName + ": " + fieldType + ";\n";
 }
 
-function getDefaultValues(typeString) {
-  switch (typeString) {
-    case "Address" :
-        return "Address.fromString(\"0x0000000000000000000000000000000000000000\")";
-    case "BigDecimal" :
-        return "BigDecimal.zero()";
-    case "BigInt" :
-        return "BigInt.zero()";
-    case "Boolean" :
-        return "false";
-    case "Bytes" :
-        return "Bytes.fromHexString(\"0x00\") as Bytes";
-    case "Int" :
-        return "0";
-    case "String" :
-        return "\"\"";
-    default:
-      return "\"" + typeString + " - Unknown type\"";
+function getDefaultValues(graphType) {
+  if (graphType === "Boolean") {
+    return "false";
+  } else if (graphType === "BigDecimal") {
+    return "BigDecimal.zero()";
+  } else if (graphType === "Bytes") {
+    return "Bytes.fromHexString(\"0x00\") as Bytes";
+  } else if (graphType === "Address") {
+    return "Address.fromString(\"0x0000000000000000000000000000000000000000\")";
+  } else if (graphType === "Int") {
+    return "0";
+  } else if (graphType === "BigInt") {
+    return "BigInt.zero()";
+  } else {
+    return "\"\"";
   }
 }
 
@@ -49,12 +46,12 @@ function toStringConverter(paramName, paramType) {
     case "Address" :
     case "Bytes" :
         return "" + paramName + ".toHex()";
-    case "BigDecimal" :
-    case "BigInt" :
-    case "Int" :
-        return "" + paramName + ".toString()";
     case "String" :
         return paramName;
+    case "BigDecimal" :
+    case "BigInt" :
+    case "i32" :
+        return "" + paramName + ".toString()";
     default:
       return "\"unhandled type in converter " + paramType + " - Please fix the converter\"";
   }
