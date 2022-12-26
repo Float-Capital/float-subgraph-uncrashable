@@ -234,7 +234,19 @@ let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
       let fieldsMap = Js.Dict.empty()
       let _ = fields->Array.map(field => {
         let fieldName = field["name"]["value"]
-        fieldsMap->Js.Dict.set(fieldName, field)
+        let isDerivedFromField =
+          field["directives"]
+          ->Array.keep(
+            directive => {
+              directive["name"]["value"] == "derivedFrom"
+            },
+          )
+          ->Array.length > 0
+
+        // NOTE: currently we completely ignore derived fields
+        if !isDerivedFromField {
+          fieldsMap->Js.Dict.set(fieldName, field)
+        }
       })
       let entityConfig =
         uncrashableConfig["entitySettings"]
