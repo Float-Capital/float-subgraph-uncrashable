@@ -15,6 +15,7 @@ let confirmTypeIsSupported = argType => {
   switch argType {
   | "String"
   | "BigInt"
+  | "Int"
   | "Bytes"
   | "Boolean"
   | "Address"
