@@ -46,12 +46,13 @@ function getDefaultValues(typeString) {
 
 function toStringConverter(paramName, paramType) {
   switch (paramType) {
-    case "BigDecimal" :
-    case "BigInt" :
-        return "" + paramName + ".toString()";
     case "Address" :
     case "Bytes" :
         return "" + paramName + ".toHex()";
+    case "BigDecimal" :
+    case "BigInt" :
+    case "Int" :
+        return "" + paramName + ".toString()";
     case "String" :
         return paramName;
     default:

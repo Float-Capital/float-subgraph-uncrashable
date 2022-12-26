@@ -66,6 +66,32 @@ function getNamedType(entityAsIdString, name) {
   }
 }
 
+function getAssemblyScriptTypeFromConfigType(configType) {
+  if (configType === "String") {
+    return "string";
+  } else if (configType === "Boolean") {
+    return "boolean";
+  } else if (configType === "BigDecimal") {
+    return "BigDecimal";
+  } else if (configType === "Bytes") {
+    return "Bytes";
+  } else if (configType === "Int") {
+    return "i32";
+  } else if (configType === "BigInt") {
+    return "BigInt";
+  } else if (configType === "constant") {
+    console.log("Please report a bug on github. This case shouldn't happen");
+    return "";
+  } else if (Belt_Option.isSome(Js_dict.get(UncrashableValidation.entitiesMap, configType))) {
+    return configType;
+  } else if (Belt_Option.isSome(Js_dict.get(UncrashableValidation.enumsMap, configType))) {
+    return "string";
+  } else {
+    console.log(GraphEntityGenTemplates.unhandledTypeMessage(configType));
+    return "UNHANDLED_TYPE";
+  }
+}
+
 function getFieldType(_entityAsIdStringOpt, _field) {
   while(true) {
     var entityAsIdStringOpt = _entityAsIdStringOpt;
@@ -266,11 +292,11 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
                           var argsDefinition = Belt_Array.joinWith(Belt_Array.keep(idArgs, (function (arg) {
                                       return arg.type !== "constant";
                                     })), ",", (function (arg) {
-                                  return "" + arg.name + ": " + arg.type + "";
+                                  return "" + arg.name + ": " + getAssemblyScriptTypeFromConfigType(arg.type) + "";
                                 }));
                           var idString = Belt_Array.joinWith(idArgs, " + \"-\" + ", (function (arg) {
                                   if (arg.type !== "constant") {
-                                    return GraphEntityGenTemplates.toStringConverter(arg.name, arg.type);
+                                    return GraphEntityGenTemplates.toStringConverter(arg.name, getAssemblyScriptTypeFromConfigType(arg.type));
                                   } else {
                                     return "\"" + arg.value + "\"";
                                   }
@@ -325,6 +351,7 @@ function run(entityDefinitions, codegenConfigPath, outputFilePath) {
 exports.UncrashableFileNotFound = UncrashableFileNotFound;
 exports.setUncrashableConfigString = setUncrashableConfigString;
 exports.getNamedType = getNamedType;
+exports.getAssemblyScriptTypeFromConfigType = getAssemblyScriptTypeFromConfigType;
 exports.getFieldType = getFieldType;
 exports.getFieldSetterType = getFieldSetterType;
 exports.getFieldValueToSave = getFieldValueToSave;

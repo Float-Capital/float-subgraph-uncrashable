@@ -33,7 +33,9 @@ let toStringConverter = (paramName, paramType) =>
   switch paramType {
   | "Bytes" => `${paramName}.toHex()`
   | "Address" => `${paramName}.toHex()`
-  | "BigInt" => `${paramName}.toString()`
+  | "Int"
+  | "BigInt" =>
+    `${paramName}.toString()`
   | "BigDecimal" => `${paramName}.toString()`
   | "String" => paramName
   | unknownType => `"unhandled type in converter ${unknownType} - Please fix the converter"`

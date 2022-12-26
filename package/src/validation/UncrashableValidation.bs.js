@@ -25,6 +25,7 @@ function confirmTypeIsSupported(argType) {
     case "BigInt" :
     case "Boolean" :
     case "Bytes" :
+    case "Int" :
     case "String" :
     case "constant" :
         return true;

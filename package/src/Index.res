@@ -54,6 +54,31 @@ let getNamedType = (~entityAsIdString, name) => {
   }
 }
 
+let getAssemblyScriptTypeFromConfigType = configType => {
+  switch configType {
+  | #String => "string"
+  | #Int => "i32"
+  | #BigInt => "BigInt"
+  | #Bytes => "Bytes"
+  | #Boolean => "boolean"
+  | #BigDecimal => "BigDecimal"
+  | #constant =>
+    Js.log("Please report a bug on github. This case shouldn't happen")
+    ""
+  | uncaught =>
+    let nonStandardTypeString = uncaught->Obj.magic
+
+    if entitiesMap->Js.Dict.get(nonStandardTypeString)->Option.isSome {
+      nonStandardTypeString
+    } else if enumsMap->Js.Dict.get(nonStandardTypeString)->Option.isSome {
+      "string"
+    } else {
+      Js.log(unhandledTypeMessage(~uncaught))
+      "UNHANDLED_TYPE"
+    }
+  }
+}
+
 let rec getFieldType = (~entityAsIdString=false, field) =>
   switch field["kind"] {
   | #NamedType => field["name"]->getNamedType(~entityAsIdString)
@@ -285,14 +310,17 @@ let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
         ->Option.map(idArgs => {
           let argsDefinition =
             idArgs
-            ->Array.keep(arg => arg["type"] != "constant")
-            ->Array.joinWith(",", arg => `${arg["name"]}: ${arg["type"]}`)
+            ->Array.keep(arg => arg["type"] != #constant)
+            ->Array.joinWith(
+              ",",
+              arg => `${arg["name"]}: ${getAssemblyScriptTypeFromConfigType(arg["type"])}`,
+            )
           // no string interpolation in assemblyscript :(
           let idString = idArgs->Array.joinWith(
             ` + "-" + `,
             arg =>
-              if arg["type"] != "constant" {
-                toStringConverter(arg["name"], arg["type"])
+              if arg["type"] != #constant {
+                toStringConverter(arg["name"], getAssemblyScriptTypeFromConfigType(arg["type"]))
               } else {
                 `"${arg["value"]}"`
               },
