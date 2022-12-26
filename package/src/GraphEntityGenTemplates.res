@@ -1,3 +1,5 @@
+open Types
+
 let loadNewEntityId = (~name) =>
   `  let loaded${name} = new ${name}(entityId);
 `
@@ -17,23 +19,23 @@ let setFieldNameToFieldType = (~fieldName, ~fieldType) =>
   `  ${fieldName}: ${fieldType};
 `
 
-let getDefaultValues = typeString =>
-  switch typeString {
-  | "Bytes" => `Bytes.fromHexString("0x00") as Bytes` // needs to be even length for some reason
-  | "Address" => `Address.fromString("0x0000000000000000000000000000000000000000")`
-  | "Int" => "0"
-  | "String" => `""`
-  | "BigInt" => "BigInt.zero()"
-  | "BigDecimal" => "BigDecimal.zero()"
-  | "Boolean" => "false"
-  | unknownType => `"${unknownType} - Unknown type"`
+let getDefaultValues = (graphType: GraphSchema.graphSchemaDataTypes) =>
+  switch graphType {
+  | #Bytes => `Bytes.fromHexString("0x00") as Bytes` // needs to be even length for some reason
+  | #Address => `Address.fromString("0x0000000000000000000000000000000000000000")`
+  | #Int => "0"
+  | #String => `""`
+  | #BigInt => "BigInt.zero()"
+  | #BigDecimal => "BigDecimal.zero()"
+  | #Boolean => "false"
+  // | unknownType => `"${unknownType->Obj.magic} - Unknown type"`
   }
 
 let toStringConverter = (paramName, paramType) =>
   switch paramType {
   | "Bytes" => `${paramName}.toHex()`
   | "Address" => `${paramName}.toHex()`
-  | "Int"
+  | "i32"
   | "BigInt" =>
     `${paramName}.toString()`
   | "BigDecimal" => `${paramName}.toString()`
