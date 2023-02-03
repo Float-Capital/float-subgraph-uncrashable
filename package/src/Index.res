@@ -29,7 +29,7 @@ type enumItem
 type interfaceItem
 type entityItem
 
-let getNamedType = (~entityAsIdString, name: GraphSchema.schemaValueType) => {
+let getNamedType = (~entityAsIdString, ~nullable, name: GraphSchema.schemaValueType) => {
   switch name.value {
   | #String => "string"
   | #Int => "i32"
@@ -52,7 +52,7 @@ let getNamedType = (~entityAsIdString, name: GraphSchema.schemaValueType) => {
       Js.log(unhandledTypeMessage(~uncaught))
       "UNHANDLED_TYPE"
     }
-  }
+  } ++ (nullable ? " | null" : "")
 }
 
 let getAssemblyScriptTypeFromConfigType = configType => {
@@ -80,15 +80,22 @@ let getAssemblyScriptTypeFromConfigType = configType => {
   }
 }
 
-let rec getFieldType = (~entityAsIdString=false, field: GraphSchema.entityFieldType) =>
+let rec getFieldType = (
+  ~entityAsIdString=false,
+  ~nullable=true,
+  field: GraphSchema.entityFieldType,
+) =>
   switch field.kind {
-  | #NamedType => field.name->getNamedType(~entityAsIdString)
+  | #NamedType => field.name->getNamedType(~entityAsIdString, ~nullable)
   | #ListType =>
     let innerType = field._type->Option.getExn->getFieldType(~entityAsIdString)
-    `Array<${innerType}>`
+    `Array<${innerType}> ${nullable ? " | null" : ""}`
   | #NonNullType =>
-    let innerType = field._type->Option.getExn->getFieldType(~entityAsIdString)
+    let innerType = field._type->Option.getExn->getFieldType(~entityAsIdString, ~nullable=false)
     innerType
+  | uncaught =>
+    Js.log(uncaught)
+    "unknown"
   }
 
 type fieldType = NormalValue | Entity | EntityArray
@@ -96,12 +103,13 @@ type fieldType = NormalValue | Entity | EntityArray
 let rec getFieldSetterType = (field: GraphSchema.entityFieldType) =>
   switch field.kind {
   | #NamedType =>
-    if entitiesMap->Js.Dict.get(field.name.value :> string)->Option.isSome {
+    if entitiesMap->Js.Dict.get((field.name.value :> string))->Option.isSome {
       Entity
     } else {
       NormalValue
     }
-  | #ListType => field._type->Option.getExn->getFieldSetterType == Entity ? EntityArray : NormalValue
+  | #ListType =>
+    field._type->Option.getExn->getFieldSetterType == Entity ? EntityArray : NormalValue
   | #NonNullType => field._type->Option.getExn->getFieldSetterType
   }
 
@@ -116,19 +124,23 @@ let getFieldValueToSave = (nameOfObject, field: GraphSchema.entityField) => {
   }
 }
 
-let getDefaultValueForType = (~strictMode, ~recersivelyCreateUncreatedEntities, typeName: Types.GraphSchema.graphSchemaDataTypes) => {
+let getDefaultValueForType = (
+  ~strictMode,
+  ~recersivelyCreateUncreatedEntities,
+  typeName: Types.GraphSchema.graphSchemaDataTypes,
+) => {
   entitiesMap
-  ->Js.Dict.get(typeName :> string)
+  ->Js.Dict.get((typeName :> string))
   ->Option.mapWithDefault(
     enumsMap
-    ->Js.Dict.get(typeName :> string)
+    ->Js.Dict.get((typeName :> string))
     ->Option.mapWithDefault(typeName->getDefaultValues, enum => {
       `"${((enum->Obj.magic)["values"]->Array.getUnsafe(0))["name"]["value"]}"`
     }),
     _entityType =>
       recersivelyCreateUncreatedEntities
-        ? `"UNINITIALISED - ${typeName :> string}"`
-        : `getOrInitialize${typeName :> string}Default("UNINITIALISED - ${typeName :> string}", ${strictMode
+        ? `"UNINITIALISED - ${(typeName :> string)}"`
+        : `getOrInitialize${(typeName :> string)}Default("UNINITIALISED - ${(typeName :> string)}", ${strictMode
               ? "true"
               : "false"}).id`,
   )
@@ -136,14 +148,19 @@ let getDefaultValueForType = (~strictMode, ~recersivelyCreateUncreatedEntities, 
 
 type entityIdPrefix = {networks: array<string>, prefix: string}
 
-let rec getFieldDefaultTypeNonNull = (~strictMode, ~recersivelyCreateUncreatedEntities, field: Types.GraphSchema.entityFieldType) =>
+let rec getFieldDefaultTypeNonNull = (
+  ~strictMode,
+  ~recersivelyCreateUncreatedEntities,
+  field: Types.GraphSchema.entityFieldType,
+) =>
   switch field.kind {
   | #ListType => "[]"
   | #NonNullType =>
     // This case sholud be impossible...
-    switch (field._type) {
-      | Some(fieldType) => fieldType->getFieldDefaultTypeNonNull(~strictMode, ~recersivelyCreateUncreatedEntities)
-      | None => ""
+    switch field._type {
+    | Some(fieldType) =>
+      fieldType->getFieldDefaultTypeNonNull(~strictMode, ~recersivelyCreateUncreatedEntities)
+    | None => ""
     }
   | #NamedType =>
     field.name.value->getDefaultValueForType(~strictMode, ~recersivelyCreateUncreatedEntities)
@@ -155,25 +172,22 @@ let getFieldDefaultTypeWithNull = (
 ) =>
   switch field.kind {
   | #NonNullType =>
-    switch (field._type) {
-      | Some(fieldType) =>
-    fieldType->getFieldDefaultTypeNonNull(~strictMode, ~recersivelyCreateUncreatedEntities)
-     | None => ""
+    switch field._type {
+    | Some(fieldType) =>
+      fieldType->getFieldDefaultTypeNonNull(~strictMode, ~recersivelyCreateUncreatedEntities)
+    | None => ""
     }
   | #ListType
   | #NamedType => "null"
   }
 
-
-let isFieldDerived = (field: GraphSchema.entityField) =>
-          {field.directives
-          ->Array.keep(
-            directive => {
-              directive.name.value == "derivedFrom"
-            },
-          )
-          ->Array.length > 0
-          }
+let isFieldDerived = (field: GraphSchema.entityField) => {
+  field.directives
+  ->Array.keep(directive => {
+    directive.name.value == "derivedFrom"
+  })
+  ->Array.length > 0
+}
 
 let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
   let uncrashableConfigString = setUncrashableConfigString(~codegenConfigPath)
@@ -237,13 +251,13 @@ let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
       let entity = entitiesMap->Js.Dict.unsafeGet(entityName)->Obj.magic
       let name = entity["name"]["value"]
 
-      let fields: array<GraphSchema.entityField> = entity["fields"]->Array.keep((field: GraphSchema.entityField) => !isFieldDerived(field))
+      let fields: array<GraphSchema.entityField> =
+        entity["fields"]->Array.keep((field: GraphSchema.entityField) => !isFieldDerived(field))
       let fieldsMap = Js.Dict.empty()
       let _ = fields->Array.map(field => {
         let fieldName = field.name.value
 
-          fieldsMap->Js.Dict.set(fieldName, field)
-        
+        fieldsMap->Js.Dict.set(fieldName, field)
       })
       let entityConfig =
         uncrashableConfig["entitySettings"]
@@ -298,6 +312,9 @@ let run = (~entityDefinitions, ~codegenConfigPath, ~outputFilePath) => {
 
       let fieldToFieldTyping = (field: GraphSchema.entityField) => {
         let fieldName = field.name.value
+
+        // let nullable = field._type.kind === #NamedType
+
         if fieldName == "id" {
           ""
         } else {
