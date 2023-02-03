@@ -58,8 +58,8 @@ function getNamedType(name) {
 function validateFieldType(config, fieldName, _field) {
   while(true) {
     var field = _field;
-    var uncaught = field.type.kind;
-    if (uncaught === "NonNullType") {
+    var _uncaught = field.type.kind;
+    if (_uncaught === "NonNullType") {
       if (Belt_Option.isSome(Js_dict.get(config, fieldName))) {
         _field = field.type;
         continue ;
@@ -70,14 +70,14 @@ function validateFieldType(config, fieldName, _field) {
               false
             ];
     }
-    if (uncaught === "NamedType") {
+    if (_uncaught === "NamedType") {
       var fieldType = getNamedType(field.type.name);
       return [
               fieldType,
               false
             ];
     }
-    if (uncaught !== "ListType") {
+    if (_uncaught !== "ListType") {
       return [
               "uncaught",
               false
