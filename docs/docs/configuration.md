@@ -15,7 +15,7 @@ Subgraph Uncrashable by Float is a complementary tool to an existing subgraph th
 
 ## Uncrashable Config
 
-Once your subgraph is in place, Subgraph Uncrashable can be used to create helper functions for your entities to ensure your subgraph doesn't crash.
+Once your subgraph is in place, Subgraph Uncrashable can be used to create helper functions for your entities to ensure your entities function as intended.
 
 Below is an example `uncrashable-config.yaml` file for the [gravatar example subgraph](https://github.com/graphprotocol/example-subgraph).
 
