@@ -6,13 +6,13 @@ This repository contains the software packages and dependencies to install and r
 
 ## Overview
 
-Subgraph Uncrashable is a code generation framework that subgraph developers can integrate into their repository for safe subgraph development and upgrades. The tool generates a set of helper functions from the graphql schema of the tool to esnure that all interactions with entities in subgraphs are completely atomic.
+Subgraph Uncrashable is a code generation framework that subgraph developers can integrate into their repositories for safe subgraph development and upgrades. The tool generates a set of helper functions from the graphql schema of the tool to ensure that all interactions with entities in subgraphs are completely atomic.
 
-Common problems seen repeatedly in subgraph development are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities, respectively. Mishandled entities cause subgraphs to crash, which can be very disruptive for projects that are dependent on the graph. Unavailability of subgraphs can result in unavailability of the overall system and adverse business impacts.
+Common developer mistakes seen repeatedly in development of subgraphs are issues of loading undefined entities, not setting or initializing all values of entities, and race conditions on loading and saving entities, respectively. Mishandled entities cause your subgraph to crash, which can be very disruptive for projects that are dependent on the graph. The unavailability of a subgraph can result in the unavailability of the overall system and adverse business impacts.
 
-The code generation is also configurable to set default values and configure the level of security checks that suits individual projects’ needs. Additionally, the tool can notify the users whenever there is a breach or potential breach of subgraph logic security and help them patch these issues. More info on this in the 'Usage' section.
+The code generation is also configurable to set default values and configure the level of security checks that suits individual projects’ needs. Additionally, the tool can notify the users whenever there is a breach or potential breach of subgraph logic security and help them patch these issues. More info on this is in the 'Usage' section.
 
-Integrate with Subgraph Uncrashable to make your subgraph "uncrashable" and ensure continuous uptime.
+Integrate with Subgraph Uncrashable to make your subgraph fool-safe and ensure continuous uptime.
 
 ## Installation
 
